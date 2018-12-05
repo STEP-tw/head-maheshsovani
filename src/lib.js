@@ -39,6 +39,10 @@ const head = function(inputDetails,readFileContent){
   let funcRef = getOutput[type];
   let fileDetails = {output : [] , delimeter:'' , count , funcRef , readFileContent };
 
+  if( count == 0 ){
+    return 'illegal line count -- 0'
+  }
+
   if(files.length == 1){
     return funcRef(readFileContent(files[0],'utf8').split('\n'),count);
   }

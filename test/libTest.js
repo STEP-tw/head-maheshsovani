@@ -186,4 +186,8 @@ describe('Head function with multiple file', function () {
     expectedOutput = '==> file1.txt <==\nmahesh\n\n==> file2.txt <==\nmahesh';
     assert.deepEqual(head(['','',"-c6",'file1.txt','file2.txt'],readFileContent),expectedOutput);
   });
+  it('should return the error message when characteres is given zero with n without spaces', function () {
+    expectedOutput = 'illegal line count -- 0';
+    assert.deepEqual(head(['','',"-n0",'file1.txt','file2.txt'],readFileContent),expectedOutput);
+  });
 });
