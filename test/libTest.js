@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { extractLines , extractCharacters , organiseInputData , fetchData } = require('../src/lib.js');
+const { extractLines , extractCharacters , organiseInputData , fetchData , head } = require('../src/lib.js');
 
 describe("extract Lines Function",function() {
 
@@ -106,6 +106,7 @@ describe('organiseInputData', function () {
     assert.deepEqual(organiseInputData(inputData),expectedOutput);
   });
 });
+
 describe('fetchData', function () {
   let inputData;
   let expectedOutput;
@@ -124,3 +125,34 @@ describe('fetchData', function () {
     assert.deepEqual(fetchData(inputData, "fileName"), expectedOutput);
   });
 });
+
+describe('Head function', function () {
+  let inputDetails;
+  let expectedOutput;
+  let readFileContent = function(x){return 'mahesh\nswapnil\narnab\naftab\ndheeraj'}
+
+  it('should return the first ten lines of file when count is not specified', function () {
+    assert.deepEqual(head([,,'file1.txt'],readFileContent),'mahesh\nswapnil\narnab\naftab\ndheeraj');
+  });
+
+  it('should return the given number of lines when only count is given', function () {
+    assert.deepEqual(head(['','',-3,'file1.txt'],readFileContent),'mahesh\nswapnil\narnab');
+  });
+
+  it('should return the given number of lines when count and type is given without spaces', function () {
+    assert.deepEqual(head(['','','-n2','file1.txt'],readFileContent),'mahesh\nswapnil');
+  });
+
+  it('should return the given number of lines when count and type is given with spaces', function () {
+    assert.deepEqual(head(['','',"-n",'1','file1.txt'],readFileContent),'mahesh');
+  });
+
+  it('should return the given number of characters when count is given with spaces', function () {
+    assert.deepEqual(head(['','',"-c",'3','file1.txt'],readFileContent),'mah');
+  });
+
+  it('should return the given number of characters when count is given without spaces', function () {
+    assert.deepEqual(head(['','',"-c6",'file1.txt'],readFileContent),'mahesh');
+  });
+});
+

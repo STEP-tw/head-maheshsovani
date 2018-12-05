@@ -33,4 +33,17 @@ const fetchData = function(fileDetails , fileName){
   return fileDetails;
 }
 
-module.exports = { extractLines , extractCharacters , organiseInputData , fetchData };
+const head = function(inputDetails,readFileContent){
+  let {type , count , files} = organiseInputData(inputDetails);
+  let getOutput = {'n':extractLines , 'c':extractCharacters};
+  let funcRef = getOutput[type];
+  let fileDetails = {output : [] , delimeter:'' , count , funcRef , readFileContent };
+
+  if(files.length == 1){
+    return funcRef(readFileContent(files[0],'utf8').split('\n'),count);
+  }
+
+  return files.reduce( fetchData ,fileDetails).output.join('\n');
+}
+
+module.exports = { extractLines , extractCharacters , organiseInputData , fetchData ,head};
