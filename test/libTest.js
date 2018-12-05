@@ -126,9 +126,7 @@ describe('fetchData', function () {
   });
 });
 
-describe('Head function', function () {
-  let inputDetails;
-  let expectedOutput;
+describe('Head function with single file', function () {
   let readFileContent = function(x){return 'mahesh\nswapnil\narnab\naftab\ndheeraj'}
 
   it('should return the first ten lines of file when count is not specified', function () {
@@ -156,3 +154,36 @@ describe('Head function', function () {
   });
 });
 
+describe('Head function with multiple file', function () {
+  let expectedOutput;
+  let readFileContent = function(x){return 'mahesh\nswapnil\narnab\naftab\ndheeraj'}
+  it('should return the first ten lines of file when count is not specified', function () {
+    expectedOutput = '==> file1.txt <==\nmahesh\nswapnil\narnab\naftab\ndheeraj\n\n==> file1.txt <==\nmahesh\nswapnil\narnab\naftab\ndheeraj'
+    assert.deepEqual(head([,,'file1.txt','file1.txt'],readFileContent),expectedOutput);
+  });
+
+  it('should return the given number of lines when only count is given', function () {
+    expectedOutput = '==> file1.txt <==\nmahesh\nswapnil\narnab\n\n==> file2.txt <==\nmahesh\nswapnil\narnab';
+    assert.deepEqual(head(['','',-3,'file1.txt','file2.txt'],readFileContent),expectedOutput);
+  });
+
+  it('should return the given number of lines when count and type is given without spaces', function () {
+    expectedOutput = '==> file1.txt <==\nmahesh\nswapnil\n\n==> file2.txt <==\nmahesh\nswapnil';
+    assert.deepEqual(head(['','','-n2','file1.txt','file2.txt'],readFileContent),expectedOutput);
+  });
+
+  it('should return the given number of lines when count and type is given with spaces', function () {
+    expectedOutput = '==> file1.txt <==\nmahesh\n\n==> file2.txt <==\nmahesh';
+    assert.deepEqual(head(['','',"-n",'1','file1.txt','file2.txt'],readFileContent),expectedOutput);
+  });
+
+  it('should return the given number of characters when count is given with spaces', function () {
+    expectedOutput = '==> file1.txt <==\nmah\n\n==> file2.txt <==\nmah';
+    assert.deepEqual(head(['','',"-c",'3','file1.txt','file2.txt'],readFileContent),expectedOutput);
+  });
+
+  it('should return the given number of characters when count is given without spaces', function () {
+    expectedOutput = '==> file1.txt <==\nmahesh\n\n==> file2.txt <==\nmahesh';
+    assert.deepEqual(head(['','',"-c6",'file1.txt','file2.txt'],readFileContent),expectedOutput);
+  });
+});
