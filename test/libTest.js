@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { extractLines , extractCharacters , organiseInputData } = require('../src/lib.js');
+const { extractLines , extractCharacters , organiseInputData , fetchData } = require('../src/lib.js');
 
 describe("extract Lines Function",function() {
 
@@ -104,5 +104,23 @@ describe('organiseInputData', function () {
     inputData = ['','','-c',15,'file1.txt','file2.txt']
     expectedOutput = {type : 'c' , count : 15 , files:['file1.txt','file2.txt']}
     assert.deepEqual(organiseInputData(inputData),expectedOutput);
+  });
+});
+describe('fetchData', function () {
+  let inputData;
+  let expectedOutput;
+  const readFileContent = filename => "yes readContent executed";
+  const truthy = value => true;
+
+  it('should return fetched data according to specified file details', function() {
+    inputData = {delimeter : '', readFileContent, funcRef : truthy, output : [], count : 2};
+    expectedOutput = {delimeter : '\n', readFileContent, funcRef : truthy, output : ["==> fileName <==" ,true], count : 2};
+    assert.deepEqual(fetchData(inputData, "fileName"), expectedOutput);
+  });
+
+  it('should return fetched data according to specified file details and should not change function reference', function() {
+    inputData = {delimeter : '', readFileContent, funcRef : truthy, output : [], count : 2};
+    expectedOutput = {delimeter : '\n', readFileContent, funcRef : truthy, output : ["==> fileName <==" , true], count : 2};
+    assert.deepEqual(fetchData(inputData, "fileName"), expectedOutput);
   });
 });

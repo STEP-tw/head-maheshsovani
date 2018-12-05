@@ -25,4 +25,12 @@ const organiseInputData = function(details){
   return organisedData;
 }
 
-module.exports = { extractLines , extractCharacters , organiseInputData };
+const fetchData = function(fileDetails , fileName){
+  let {readFileContent , delimeter , output, funcRef , count} = fileDetails;
+  output.push(delimeter + '==> '+ fileName +' <==')
+  output.push(funcRef(readFileContent(fileName,'utf8').split('\n'),count));
+  fileDetails.delimeter = '\n';
+  return fileDetails;
+}
+
+module.exports = { extractLines , extractCharacters , organiseInputData , fetchData };
