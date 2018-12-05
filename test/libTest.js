@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { extractLines , extractCharacters } = require('../src/lib.js');
+const { extractLines , extractCharacters , organiseInputData } = require('../src/lib.js');
 
 describe("extract Lines Function",function() {
 
@@ -62,8 +62,47 @@ describe("extract Characters Function",function() {
   });
 
   it("should return whole file when number of characters is not specified",function() {
-    expectedOutput = 'Four sided figure is called quadrilateral';
+    expectedOutput = 'Four sided figure is called quadrilateral\n';
     expectedOutput += 'Five sided figure is called pentagon';
     assert.deepEqual(extractCharacters(string),expectedOutput);
+  });
+});
+
+
+describe('organiseInputData', function () {
+  let inputData;
+  let expectedOutput;
+
+  it('should give default type -n and count 10 when count and type are not specified', function () {
+    inputData = ['','','file1.txt']
+    expectedOutput = {type : 'n' , count : 10 , files:['file1.txt']}
+    assert.deepEqual(organiseInputData(inputData),expectedOutput);
+  });
+
+  it('should give default type -n and count as given when type is not specified', function () {
+    inputData = ['','',-5,'file1.txt','file2.txt']
+    expectedOutput = {type : 'n' , count : 5 , files:['file1.txt','file2.txt']}
+    assert.deepEqual(organiseInputData(inputData),expectedOutput);
+  });
+
+  it('should return organised type and count when both are given without spaces', function () {
+    inputData = ['','','-n10','file1.txt','file2.txt']
+    expectedOutput = {type : 'n' , count : 10 , files:['file1.txt','file2.txt']}
+    assert.deepEqual(organiseInputData(inputData),expectedOutput);
+
+    inputData = ['','','-c10','file1.txt','file2.txt']
+    expectedOutput = {type : 'c' , count : 10 , files:['file1.txt','file2.txt']}
+    assert.deepEqual(organiseInputData(inputData),expectedOutput);
+  });
+
+  it('should return organised type and count when both are given with spaces in between.', function () {
+
+    let inputData = [,,'-n',12, 'file1.txt','file2.txt']
+    let expectedOutput = {type : 'n' , count : 12 , files:['file1.txt','file2.txt']}
+    assert.deepEqual(organiseInputData(inputData),expectedOutput);
+
+    inputData = ['','','-c',15,'file1.txt','file2.txt']
+    expectedOutput = {type : 'c' , count : 15 , files:['file1.txt','file2.txt']}
+    assert.deepEqual(organiseInputData(inputData),expectedOutput);
   });
 });
