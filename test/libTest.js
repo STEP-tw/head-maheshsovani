@@ -231,6 +231,12 @@ describe("Head function errors handling",function() {
     assert.deepEqual(head(['','',"-z",'README.mdafs','file2.txt'],readFileContent,doesExist),expectedOutput);
   }); 
 
+  it("should return the error message when option is correct but only one file which doesn't exist is given", function () {
+    doesExist = function(fileName) { return false } ;
+    expectedOutput = 'head: README.mdafs: No such file or directory';
+    assert.deepEqual(head(['','',"-n3",'README.mdafs'],readFileContent,doesExist),expectedOutput);
+  }); 
+
   it('should return the error message when -n or -c and then alphanumeric combination is given ', function () {
     doesExist = function(fileName) { return true } ;
     expectedOutput = 'head: illegal line count -- u922';
