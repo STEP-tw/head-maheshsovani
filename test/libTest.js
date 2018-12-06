@@ -2,7 +2,6 @@ const assert = require('assert');
 const { extractLines , extractCharacters , organiseInputData , fetchData , head } = require('../src/lib.js');
 
 describe("extract Lines Function",function() {
-
   let string = [];
   let expectedOutput = '';
 
@@ -42,7 +41,6 @@ describe("extract Lines Function",function() {
 
 
 describe("extract Characters Function",function() {
-
   let string = [];
   let expectedOutput = '';
   string[0] = 'Four sided figure is called quadrilateral';
@@ -224,6 +222,14 @@ describe("Head function errors handling",function() {
     doesExist = function(fileName) { return false } ;
     expectedOutput = 'head: illegal option -- x\nusage: head [-n lines | -c bytes] [file ...]'  
     assert.deepEqual(head(['','',"-x3",'README.mdafs','file2.txt'],readFileContent,doesExist),expectedOutput);
+  }); 
+
+  it('should return the error message when -n or -c and then alphanumeric combination is given ', function () {
+    doesExist = function(fileName) { return false } ;
+    expectedOutput = 'head: illegal line count -- -u922';
+    assert.deepEqual(head(['','',"-nu922",'README.mdafs','file2.txt'],readFileContent,doesExist),expectedOutput);
+    expectedOutput = 'head: illegal byte count -- -u922';
+    assert.deepEqual(head(['','',"-cu922",'README.mdafs','file2.txt'],readFileContent,doesExist),expectedOutput);
   }); 
 });
 
