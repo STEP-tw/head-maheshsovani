@@ -25,22 +25,40 @@ const organiseInputData = function(details){
   return organisedData;
 }
 
+const isPresent = function(fileName,doesExist){
+  return doesExist(fileName);
+}
+
+
 const fetchData = function(fileDetails , fileName){
-  let {readFileContent , delimeter , output, funcRef , count} = fileDetails;
-  output.push(delimeter + '==> '+ fileName +' <==')
-  output.push(funcRef(readFileContent(fileName,'utf8').split('\n'),count));
-  fileDetails.delimeter = '\n';
+  let {readFileContent ,doesExist , delimeter , output, funcRef , count} = fileDetails;
+
+  if(isPresent(fileName,doesExist)){
+    output.push(delimeter + '==> '+ fileName +' <==')
+    output.push(funcRef(readFileContent(fileName,'utf8').split('\n'),count));
+    fileDetails.delimeter = '\n';
+    return fileDetails;
+  }
+  output.push('head: '+fileName+': No such file or directory');
   return fileDetails;
 }
 
-const head = function(inputDetails,readFileContent){
+const head = function(inputDetails,readFileContent,doesExist){
   let {type , count , files} = organiseInputData(inputDetails);
   let getOutput = {'n':extractLines , 'c':extractCharacters};
   let funcRef = getOutput[type];
-  let fileDetails = {output : [] , delimeter:'' , count , funcRef , readFileContent };
+  let fileDetails = {output : [] , delimeter:'' , count , funcRef , readFileContent ,doesExist };
 
   if( inputDetails[2] == 0 || count == 0 ){
     return 'head: illegal line count -- 0'
+  }
+
+  if(isNaN(count-0) || count < 1) { 
+    return (type == 'n') ? 'head: illegal line count -- -' + count : 'head: illegal byte count -- -' + count; 
+  }
+
+  if(inputDetails[2][0]=='-' && inputDetails[2][1] !='n' && inputDetails[2][1] != 'c' && !parseInt(inputDetails[2])){
+    return 'head: illegal option -- '+inputDetails[2][1]+'\nusage: head [-n lines | -c bytes] [file ...]'
   }
 
   if(files.length == 1){

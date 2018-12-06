@@ -110,39 +110,41 @@ describe('organiseInputData', function () {
 describe('fetchData', function () {
   let inputData;
   let expectedOutput;
+  const doesExist = fileName => true
   const readFileContent = filename => "yes readContent executed";
   const truthy = value => true;
 
   it('should return fetched data according to specified file details', function() {
-    inputData = {delimeter : '', readFileContent, funcRef : truthy, output : [], count : 2};
-    expectedOutput = {delimeter : '\n', readFileContent, funcRef : truthy, output : ["==> fileName <==" ,true], count : 2};
+    inputData = {delimeter : '', readFileContent, funcRef : truthy, output : [], count : 2 , doesExist};
+    expectedOutput = {delimeter : '\n', readFileContent, funcRef : truthy, output : ["==> fileName <==" ,true], doesExist , count : 2};
     assert.deepEqual(fetchData(inputData, "fileName"), expectedOutput);
   });
 
   it('should return fetched data according to specified file details and should not change function reference', function() {
-    inputData = {delimeter : '', readFileContent, funcRef : truthy, output : [], count : 2};
-    expectedOutput = {delimeter : '\n', readFileContent, funcRef : truthy, output : ["==> fileName <==" , true], count : 2};
+    inputData = {delimeter : '', readFileContent, funcRef : truthy, output : [], count : 2 ,doesExist};
+    expectedOutput = {delimeter : '\n', readFileContent, funcRef : truthy, output : ["==> fileName <==" , true], count : 2 , doesExist};
     assert.deepEqual(fetchData(inputData, "fileName"), expectedOutput);
   });
 });
 
 describe('Head function with single file', function () {
   let readFileContent = function(x){return 'mahesh\nswapnil\narnab\naftab\ndheeraj'}
+  const doesExist = fileName => true
 
   it('should return the first ten lines of file when count is not specified', function () {
-    assert.deepEqual(head([,,'file1.txt'],readFileContent),'mahesh\nswapnil\narnab\naftab\ndheeraj');
+    assert.deepEqual(head([,,'file1.txt'],readFileContent,doesExist),'mahesh\nswapnil\narnab\naftab\ndheeraj');
   });
 
   it('should return the given number of lines when only count is given', function () {
-    assert.deepEqual(head(['','',-3,'file1.txt'],readFileContent),'mahesh\nswapnil\narnab');
+    assert.deepEqual(head(['','',-3,'file1.txt'],readFileContent,doesExist),'mahesh\nswapnil\narnab');
   });
 
   it('should return the given number of lines when count and type is given without spaces', function () {
-    assert.deepEqual(head(['','','-n2','file1.txt'],readFileContent),'mahesh\nswapnil');
+    assert.deepEqual(head(['','','-n2','file1.txt'],readFileContent,doesExist),'mahesh\nswapnil');
   });
 
   it('should return the given number of lines when count and type is given with spaces', function () {
-    assert.deepEqual(head(['','',"-n",'1','file1.txt'],readFileContent),'mahesh');
+    assert.deepEqual(head(['','',"-n",'1','file1.txt'],readFileContent,doesExist),'mahesh');
   });
 
   it('should return the given number of characters when count is given with spaces', function () {
@@ -156,44 +158,72 @@ describe('Head function with single file', function () {
 
 describe('Head function with multiple file', function () {
   let expectedOutput;
+  let doesExist = fileName=>true;
   let readFileContent = function(x){return 'mahesh\nswapnil\narnab\naftab\ndheeraj'}
   it('should return the first ten lines of file when count is not specified', function () {
     expectedOutput = '==> file1.txt <==\nmahesh\nswapnil\narnab\naftab\ndheeraj\n\n==> file1.txt <==\nmahesh\nswapnil\narnab\naftab\ndheeraj'
-    assert.deepEqual(head([,,'file1.txt','file1.txt'],readFileContent),expectedOutput);
+    assert.deepEqual(head([,,'file1.txt','file1.txt'],readFileContent,doesExist),expectedOutput);
   });
 
   it('should return the given number of lines when only count is given', function () {
     expectedOutput = '==> file1.txt <==\nmahesh\nswapnil\narnab\n\n==> file2.txt <==\nmahesh\nswapnil\narnab';
-    assert.deepEqual(head(['','',-3,'file1.txt','file2.txt'],readFileContent),expectedOutput);
+    assert.deepEqual(head(['','',-3,'file1.txt','file2.txt'],readFileContent,doesExist),expectedOutput);
   });
 
   it('should return the given number of lines when count and type is given without spaces', function () {
     expectedOutput = '==> file1.txt <==\nmahesh\nswapnil\n\n==> file2.txt <==\nmahesh\nswapnil';
-    assert.deepEqual(head(['','','-n2','file1.txt','file2.txt'],readFileContent),expectedOutput);
+    assert.deepEqual(head(['','','-n2','file1.txt','file2.txt'],readFileContent,doesExist),expectedOutput);
   });
 
   it('should return the given number of lines when count and type is given with spaces', function () {
     expectedOutput = '==> file1.txt <==\nmahesh\n\n==> file2.txt <==\nmahesh';
-    assert.deepEqual(head(['','',"-n",'1','file1.txt','file2.txt'],readFileContent),expectedOutput);
+    assert.deepEqual(head(['','',"-n",'1','file1.txt','file2.txt'],readFileContent,doesExist),expectedOutput);
   });
 
   it('should return the given number of characters when count is given with spaces', function () {
     expectedOutput = '==> file1.txt <==\nmah\n\n==> file2.txt <==\nmah';
-    assert.deepEqual(head(['','',"-c",'3','file1.txt','file2.txt'],readFileContent),expectedOutput);
+    assert.deepEqual(head(['','',"-c",'3','file1.txt','file2.txt'],readFileContent,doesExist),expectedOutput);
   });
 
   it('should return the given number of characters when count is given without spaces', function () {
     expectedOutput = '==> file1.txt <==\nmahesh\n\n==> file2.txt <==\nmahesh';
-    assert.deepEqual(head(['','',"-c6",'file1.txt','file2.txt'],readFileContent),expectedOutput);
+    assert.deepEqual(head(['','',"-c6",'file1.txt','file2.txt'],readFileContent,doesExist),expectedOutput);
   });
+});
 
+describe("Head function errors handling",function() {
+  const readFileContent = filename =>'mahesh\nswapnil\narnab'
+  let doesExist = fileName => true 
   it('should return the error message when number of lines is given zero with n without spaces', function () {
     expectedOutput = 'head: illegal line count -- 0';
-    assert.deepEqual(head(['','',"-n0",'file1.txt','file2.txt'],readFileContent),expectedOutput);
+    assert.deepEqual(head(['','',"-n0",'file1.txt','file2.txt'],readFileContent,doesExist),expectedOutput);
   });
 
   it('should return the error message when  is count is given zero only without -c or -n', function () {
     expectedOutput = 'head: illegal line count -- 0';
-    assert.deepEqual(head(['','',"-0",'file1.txt','file2.txt'],readFileContent),expectedOutput);
-  });
+    assert.deepEqual(head(['','',"-0",'file1.txt','file2.txt'],readFileContent,doesExist),expectedOutput);
+  }); 
+
+  it('should return the error message when  is count is given zero only without -c or -n', function () {
+    expectedOutput = 'head: illegal line count -- 0';
+    assert.deepEqual(head(['','',"0",'file1.txt','file2.txt'],readFileContent,doesExist),expectedOutput);
+  }); 
+
+  it('should return the error message when  is count is invalid with -c or -n', function () {
+    expectedOutput =  'head: illegal line count -- --12';
+    assert.deepEqual(head(['','',"-n-12",'file1.txt','file2.txt'],readFileContent,doesExist),expectedOutput);
+  }); 
+
+  it('should return the error message when  file is not present in the directory', function () {
+    doesExist = function(fileName) { return false } ;
+    expectedOutput = 'head: README.mdafs: No such file or directory\nhead: file2.txt: No such file or directory';;
+    assert.deepEqual(head(['','',"-n3",'README.mdafs','file2.txt'],readFileContent,doesExist),expectedOutput);
+  }); 
+
+  it('should return the error message when type other than -c or -n is given ', function () {
+    doesExist = function(fileName) { return false } ;
+    expectedOutput = 'head: illegal option -- x\nusage: head [-n lines | -c bytes] [file ...]'  
+    assert.deepEqual(head(['','',"-x3",'README.mdafs','file2.txt'],readFileContent,doesExist),expectedOutput);
+  }); 
 });
+
