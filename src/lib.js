@@ -50,9 +50,10 @@ const head = function(inputDetails,readFileContent,doesExist){
     return 'head: illegal option -- '+inputDetails[2][1]+'\nusage: head [-n lines | -c bytes] [file ...]'
   }
   if(isNaN(count-0) || count < 1) { 
-    return (type == 'n') ? 'head: illegal line count -- -' + count : 'head: illegal byte count -- -' + count; 
+    return (type == 'n') ? 'head: illegal line count -- ' + count : 'head: illegal byte count -- ' + count; 
   }
   if(files.length == 1){
+    if(!isPresent(files[0],doesExist)) { return 'head: '+files[0]+': No such file or directory'}
     return funcRef(readFileContent(files[0],'utf8').split('\n'),count);
   }
   return files.reduce( fetchData ,fileDetails).output.join('\n');

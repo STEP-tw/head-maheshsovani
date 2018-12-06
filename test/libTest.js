@@ -146,11 +146,11 @@ describe('Head function with single file', function () {
   });
 
   it('should return the given number of characters when count is given with spaces', function () {
-    assert.deepEqual(head(['','',"-c",'3','file1.txt'],readFileContent),'mah');
+    assert.deepEqual(head(['','',"-c",'3','file1.txt'],readFileContent,doesExist),'mah');
   });
 
   it('should return the given number of characters when count is given without spaces', function () {
-    assert.deepEqual(head(['','',"-c6",'file1.txt'],readFileContent),'mahesh');
+    assert.deepEqual(head(['','',"-c6",'file1.txt'],readFileContent,doesExist),'mahesh');
   });
 });
 
@@ -192,6 +192,7 @@ describe('Head function with multiple file', function () {
 describe("Head function errors handling",function() {
   const readFileContent = filename =>'mahesh\nswapnil\narnab'
   let doesExist = fileName => true 
+
   it('should return the error message when number of lines is given zero with n without spaces', function () {
     expectedOutput = 'head: illegal line count -- 0';
     assert.deepEqual(head(['','',"-n0",'file1.txt','file2.txt'],readFileContent,doesExist),expectedOutput);
@@ -208,7 +209,7 @@ describe("Head function errors handling",function() {
   }); 
 
   it('should return the error message when  is count is invalid with -c or -n', function () {
-    expectedOutput =  'head: illegal line count -- --12';
+    expectedOutput =  'head: illegal line count -- -12';
     assert.deepEqual(head(['','',"-n-12",'file1.txt','file2.txt'],readFileContent,doesExist),expectedOutput);
   }); 
 
@@ -226,9 +227,9 @@ describe("Head function errors handling",function() {
 
   it('should return the error message when -n or -c and then alphanumeric combination is given ', function () {
     doesExist = function(fileName) { return false } ;
-    expectedOutput = 'head: illegal line count -- -u922';
+    expectedOutput = 'head: illegal line count -- u922';
     assert.deepEqual(head(['','',"-nu922",'README.mdafs','file2.txt'],readFileContent,doesExist),expectedOutput);
-    expectedOutput = 'head: illegal byte count -- -u922';
+    expectedOutput = 'head: illegal byte count -- u922';
     assert.deepEqual(head(['','',"-cu922",'README.mdafs','file2.txt'],readFileContent,doesExist),expectedOutput);
   }); 
 });
