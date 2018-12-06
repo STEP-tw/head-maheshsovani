@@ -39,6 +39,7 @@ const fetchData = function(fileDetails , fileName){
     fileDetails.delimeter = '\n';
     return fileDetails;
   }
+
   output.push('head: '+fileName+': No such file or directory');
   return fileDetails;
 }
