@@ -225,8 +225,14 @@ describe("Head function errors handling",function() {
     assert.deepEqual(head(['','',"-x3",'README.mdafs','file2.txt'],readFileContent,doesExist),expectedOutput);
   }); 
 
-  it('should return the error message when -n or -c and then alphanumeric combination is given ', function () {
+  it('should return the error message when option other than -c or -n is given ', function () {
     doesExist = function(fileName) { return false } ;
+    expectedOutput = 'head: illegal option -- z\nusage: head [-n lines | -c bytes] [file ...]'  
+    assert.deepEqual(head(['','',"-z",'README.mdafs','file2.txt'],readFileContent,doesExist),expectedOutput);
+  }); 
+
+  it('should return the error message when -n or -c and then alphanumeric combination is given ', function () {
+    doesExist = function(fileName) { return true } ;
     expectedOutput = 'head: illegal line count -- u922';
     assert.deepEqual(head(['','',"-nu922",'README.mdafs','file2.txt'],readFileContent,doesExist),expectedOutput);
     expectedOutput = 'head: illegal byte count -- u922';
