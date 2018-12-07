@@ -32,23 +32,23 @@ const parseInput = function(details) {
   return organisedData;
 };
 
-const isPresent = function(fileName, doesExist) {
-  return doesExist(fileName);
+const isPresent = function(fileName, existsSync) {
+  return existsSync(fileName);
 };
 
 const retrieveData = function(fileDetails, fileName) {
   let {
-    readFileContent,
-    doesExist,
+    readFileSync,
+    existsSync,
     delimeter,
     content,
     funcRef,
     count
   } = fileDetails;
 
-  if (isPresent(fileName, doesExist)) {
+  if (isPresent(fileName, existsSync)) {
     content.push(delimeter + "==> " + fileName + " <==");
-    content.push(funcRef(readFileContent(fileName, "utf8").split("\n"), count));
+    content.push(funcRef(readFileSync(fileName, "utf8").split("\n"), count));
     fileDetails.delimeter = "\n";
     return fileDetails;
   }
@@ -56,7 +56,9 @@ const retrieveData = function(fileDetails, fileName) {
   return fileDetails;
 };
 
-const head = function(inputDetails, readFileContent, doesExist) {
+const head = function(inputDetails, fs) {
+  const existsSync = fs.existsSync;
+  const readFileSync = fs.readFileSync;
   let { option, count, files } = parseInput(inputDetails);
   let getOutput = { n: extractLines, c: extractCharacters };
   let funcRef = getOutput[option];
@@ -65,8 +67,8 @@ const head = function(inputDetails, readFileContent, doesExist) {
     delimeter: "",
     count,
     funcRef,
-    readFileContent,
-    doesExist
+    readFileSync,
+    existsSync
   };
 
   if (inputDetails[0] == 0 || count == 0) {
@@ -90,10 +92,10 @@ const head = function(inputDetails, readFileContent, doesExist) {
       : "head: illegal byte count -- " + count;
   }
   if (files.length == 1) {
-    if (!isPresent(files[0], doesExist)) {
+    if (!isPresent(files[0], existsSync)) {
       return "head: " + files[0] + ": No such file or directory";
     }
-    return funcRef(readFileContent(files[0], "utf8").split("\n"), count);
+    return funcRef(readFileSync(files[0], "utf8").split("\n"), count);
   }
   return files.reduce(retrieveData, fileDetails).content.join("\n");
 };
