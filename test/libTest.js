@@ -76,13 +76,13 @@ describe("parseInput", function() {
   let expectedOutput;
 
   it("should give default option -n and count 10 when count and option are not specified", function() {
-    inputData = ["", "", "file1.txt"];
+    inputData = ["file1.txt"];
     expectedOutput = { option: "n", count: 10, files: ["file1.txt"] };
     assert.deepEqual(parseInput(inputData), expectedOutput);
   });
 
   it("should give default option -n and count as given when option is not specified", function() {
-    inputData = ["", "", -5, "file1.txt", "file2.txt"];
+    inputData = [-5, "file1.txt", "file2.txt"];
     expectedOutput = {
       option: "n",
       count: 5,
@@ -92,7 +92,7 @@ describe("parseInput", function() {
   });
 
   it("should return organised option and count when both are given without spaces", function() {
-    inputData = ["", "", "-n10", "file1.txt", "file2.txt"];
+    inputData = ["-n10", "file1.txt", "file2.txt"];
     expectedOutput = {
       option: "n",
       count: 10,
@@ -100,7 +100,7 @@ describe("parseInput", function() {
     };
     assert.deepEqual(parseInput(inputData), expectedOutput);
 
-    inputData = ["", "", "-c10", "file1.txt", "file2.txt"];
+    inputData = ["-c10", "file1.txt", "file2.txt"];
     expectedOutput = {
       option: "c",
       count: 10,
@@ -110,7 +110,7 @@ describe("parseInput", function() {
   });
 
   it("should return organised option and count when both are given with spaces in between.", function() {
-    let inputData = [, , "-n", 12, "file1.txt", "file2.txt"];
+    let inputData = ["-n", 12, "file1.txt", "file2.txt"];
     let expectedOutput = {
       option: "n",
       count: 12,
@@ -118,7 +118,7 @@ describe("parseInput", function() {
     };
     assert.deepEqual(parseInput(inputData), expectedOutput);
 
-    inputData = ["", "", "-c", 15, "file1.txt", "file2.txt"];
+    inputData = ["-c", 15, "file1.txt", "file2.txt"];
     expectedOutput = {
       option: "c",
       count: 15,
@@ -184,42 +184,42 @@ describe("Head function with single file", function() {
 
   it("should return the first ten lines of file when count is not specified", function() {
     assert.deepEqual(
-      head([, , "file1.txt"], readFileContent, doesExist),
+      head(["file1.txt"], readFileContent, doesExist),
       "mahesh\nswapnil\narnab\naftab\ndheeraj"
     );
   });
 
   it("should return the given number of lines when only count is given", function() {
     assert.deepEqual(
-      head(["", "", -3, "file1.txt"], readFileContent, doesExist),
+      head([-3, "file1.txt"], readFileContent, doesExist),
       "mahesh\nswapnil\narnab"
     );
   });
 
   it("should return the given number of lines when count and option is given without spaces", function() {
     assert.deepEqual(
-      head(["", "", "-n2", "file1.txt"], readFileContent, doesExist),
+      head(["-n2", "file1.txt"], readFileContent, doesExist),
       "mahesh\nswapnil"
     );
   });
 
   it("should return the given number of lines when count and option is given with spaces", function() {
     assert.deepEqual(
-      head(["", "", "-n", "1", "file1.txt"], readFileContent, doesExist),
+      head(["-n", "1", "file1.txt"], readFileContent, doesExist),
       "mahesh"
     );
   });
 
   it("should return the given number of characters when count is given with spaces", function() {
     assert.deepEqual(
-      head(["", "", "-c", "3", "file1.txt"], readFileContent, doesExist),
+      head(["-c", "3", "file1.txt"], readFileContent, doesExist),
       "mah"
     );
   });
 
   it("should return the given number of characters when count is given without spaces", function() {
     assert.deepEqual(
-      head(["", "", "-c6", "file1.txt"], readFileContent, doesExist),
+      head(["-c6", "file1.txt"], readFileContent, doesExist),
       "mahesh"
     );
   });
@@ -235,7 +235,7 @@ describe("Head function with multiple file", function() {
     expectedOutput =
       "==> file1.txt <==\nmahesh\nswapnil\narnab\naftab\ndheeraj\n\n==> file1.txt <==\nmahesh\nswapnil\narnab\naftab\ndheeraj";
     assert.deepEqual(
-      head([, , "file1.txt", "file1.txt"], readFileContent, doesExist),
+      head(["file1.txt", "file1.txt"], readFileContent, doesExist),
       expectedOutput
     );
   });
@@ -244,7 +244,7 @@ describe("Head function with multiple file", function() {
     expectedOutput =
       "==> file1.txt <==\nmahesh\nswapnil\narnab\n\n==> file2.txt <==\nmahesh\nswapnil\narnab";
     assert.deepEqual(
-      head(["", "", -3, "file1.txt", "file2.txt"], readFileContent, doesExist),
+      head([-3, "file1.txt", "file2.txt"], readFileContent, doesExist),
       expectedOutput
     );
   });
@@ -254,7 +254,7 @@ describe("Head function with multiple file", function() {
       "==> file1.txt <==\nmahesh\nswapnil\n\n==> file2.txt <==\nmahesh\nswapnil";
     assert.deepEqual(
       head(
-        ["", "", "-n2", "file1.txt", "file2.txt"],
+        ["-n2", "file1.txt", "file2.txt"],
         readFileContent,
         doesExist
       ),
@@ -266,7 +266,7 @@ describe("Head function with multiple file", function() {
     expectedOutput = "==> file1.txt <==\nmahesh\n\n==> file2.txt <==\nmahesh";
     assert.deepEqual(
       head(
-        ["", "", "-n", "1", "file1.txt", "file2.txt"],
+        ["-n", "1", "file1.txt", "file2.txt"],
         readFileContent,
         doesExist
       ),
@@ -278,7 +278,7 @@ describe("Head function with multiple file", function() {
     expectedOutput = "==> file1.txt <==\nmah\n\n==> file2.txt <==\nmah";
     assert.deepEqual(
       head(
-        ["", "", "-c", "3", "file1.txt", "file2.txt"],
+        ["-c", "3", "file1.txt", "file2.txt"],
         readFileContent,
         doesExist
       ),
@@ -290,7 +290,7 @@ describe("Head function with multiple file", function() {
     expectedOutput = "==> file1.txt <==\nmahesh\n\n==> file2.txt <==\nmahesh";
     assert.deepEqual(
       head(
-        ["", "", "-c6", "file1.txt", "file2.txt"],
+        ["-c6", "file1.txt", "file2.txt"],
         readFileContent,
         doesExist
       ),
@@ -307,7 +307,7 @@ describe("Head function errors handling", function() {
     expectedOutput = "head: illegal line count -- 0";
     assert.deepEqual(
       head(
-        ["", "", "-n0", "file1.txt", "file2.txt"],
+        ["-n0", "file1.txt", "file2.txt"],
         readFileContent,
         doesExist
       ),
@@ -319,7 +319,7 @@ describe("Head function errors handling", function() {
     expectedOutput = "head: illegal line count -- 0";
     assert.deepEqual(
       head(
-        ["", "", "-0", "file1.txt", "file2.txt"],
+        ["-0", "file1.txt", "file2.txt"],
         readFileContent,
         doesExist
       ),
@@ -330,7 +330,7 @@ describe("Head function errors handling", function() {
   it("should return the error message when  is count is given zero only without -c or -n", function() {
     expectedOutput = "head: illegal line count -- 0";
     assert.deepEqual(
-      head(["", "", "0", "file1.txt", "file2.txt"], readFileContent, doesExist),
+      head(["0", "file1.txt", "file2.txt"], readFileContent, doesExist),
       expectedOutput
     );
   });
@@ -339,7 +339,7 @@ describe("Head function errors handling", function() {
     expectedOutput = "head: illegal line count -- -12";
     assert.deepEqual(
       head(
-        ["", "", "-n-12", "file1.txt", "file2.txt"],
+        ["-n-12", "file1.txt", "file2.txt"],
         readFileContent,
         doesExist
       ),
@@ -355,7 +355,7 @@ describe("Head function errors handling", function() {
       "head: README.mdafs: No such file or directory\nhead: file2.txt: No such file or directory";
     assert.deepEqual(
       head(
-        ["", "", "-n3", "README.mdafs", "file2.txt"],
+        ["-n3", "README.mdafs", "file2.txt"],
         readFileContent,
         doesExist
       ),
@@ -371,7 +371,7 @@ describe("Head function errors handling", function() {
       "head: illegal option -- x\nusage: head [-n lines | -c bytes] [file ...]";
     assert.deepEqual(
       head(
-        ["", "", "-x3", "README.mdafs", "file2.txt"],
+        ["-x3", "README.mdafs", "file2.txt"],
         readFileContent,
         doesExist
       ),
@@ -387,7 +387,7 @@ describe("Head function errors handling", function() {
       "head: illegal option -- z\nusage: head [-n lines | -c bytes] [file ...]";
     assert.deepEqual(
       head(
-        ["", "", "-z", "README.mdafs", "file2.txt"],
+        ["-z", "README.mdafs", "file2.txt"],
         readFileContent,
         doesExist
       ),
@@ -401,7 +401,7 @@ describe("Head function errors handling", function() {
     };
     expectedOutput = "head: README.mdafs: No such file or directory";
     assert.deepEqual(
-      head(["", "", "-n3", "README.mdafs"], readFileContent, doesExist),
+      head(["-n3", "README.mdafs"], readFileContent, doesExist),
       expectedOutput
     );
   });
@@ -413,7 +413,7 @@ describe("Head function errors handling", function() {
     expectedOutput = "head: illegal line count -- u922";
     assert.deepEqual(
       head(
-        ["", "", "-nu922", "README.mdafs", "file2.txt"],
+        ["-nu922", "README.mdafs", "file2.txt"],
         readFileContent,
         doesExist
       ),
@@ -422,7 +422,7 @@ describe("Head function errors handling", function() {
     expectedOutput = "head: illegal byte count -- u922";
     assert.deepEqual(
       head(
-        ["", "", "-cu922", "README.mdafs", "file2.txt"],
+        ["-cu922", "README.mdafs", "file2.txt"],
         readFileContent,
         doesExist
       ),

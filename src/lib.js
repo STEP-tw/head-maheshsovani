@@ -7,26 +7,26 @@ const extractCharacters = function(file, numberOfCharacters) {
 };
 
 const parseInput = function(details) {
-  let organisedData = { option: "n", count: 10, files: details.slice(2) };
-  if (details[2] == "-n" || details[2] == "-c") {
+  let organisedData = { option: "n", count: 10, files: details.slice(0) };
+  if (details[0] == "-n" || details[0] == "-c") {
     organisedData = {
-      option: details[2][1],
-      count: details[3],
-      files: details.slice(4)
+      option: details[0][1],
+      count: details[1],
+      files: details.slice(2)
     };
   }
-  if (details[2][0] == "-" && details[2].length > 2) {
+  if (details[0][0] == "-" && details[0].length > 2) {
     organisedData = {
-      option: details[2][1],
-      count: details[2].slice(2),
-      files: details.slice(3)
+      option: details[0][1],
+      count: details[0].slice(2),
+      files: details.slice(1)
     };
   }
-  if (parseInt(details[2])) {
+  if (parseInt(details[0])) {
     organisedData = {
       option: "n",
-      count: Math.abs(details[2]),
-      files: details.slice(3)
+      count: Math.abs(details[0]),
+      files: details.slice(1)
     };
   }
   return organisedData;
@@ -69,18 +69,18 @@ const head = function(inputDetails, readFileContent, doesExist) {
     doesExist
   };
 
-  if (inputDetails[2] == 0 || count == 0) {
+  if (inputDetails[0] == 0 || count == 0) {
     return "head: illegal line count -- 0";
   }
   if (
-    inputDetails[2][0] == "-" &&
-    inputDetails[2][1] != "n" &&
-    inputDetails[2][1] != "c" &&
-    !parseInt(inputDetails[2])
+    inputDetails[0][0] == "-" &&
+    inputDetails[0][1] != "n" &&
+    inputDetails[0][1] != "c" &&
+    !parseInt(inputDetails[0])
   ) {
     return (
       "head: illegal option -- " +
-      inputDetails[2][1] +
+      inputDetails[0][1] +
       "\nusage: head [-n lines | -c bytes] [file ...]"
     );
   }
