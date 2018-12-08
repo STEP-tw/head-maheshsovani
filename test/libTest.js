@@ -7,6 +7,20 @@ const {
   head
 } = require("../src/lib.js");
 
+const readFileSync = function(fileName) {
+  let fileContents = {
+    names: "mahesh\nswapnil\narnab\naftab\ndheeraj",
+    numbers: "one\ntwo\nthree\nfour\nfive"
+  };
+  return fileContents[fileName];
+};
+const existsSync = function(fileName) {
+  let fileNames = ["names", "numbers"];
+  return fileNames.includes(fileName);
+};
+
+const fs = { readFileSync: readFileSync, existsSync: existsSync };
+
 describe("extract Lines Function", function() {
   let string = [];
   let expectedOutput = "";
@@ -76,53 +90,53 @@ describe("parseInput", function() {
   let expectedOutput;
 
   it("should give default option -n and count 10 when count and option are not specified", function() {
-    inputData = ["file1.txt"];
-    expectedOutput = { option: "n", count: 10, files: ["file1.txt"] };
+    inputData = ["names"];
+    expectedOutput = { option: "n", count: 10, files: ["names"] };
     assert.deepEqual(parseInput(inputData), expectedOutput);
   });
 
   it("should give default option -n and count as given when option is not specified", function() {
-    inputData = [-5, "file1.txt", "file2.txt"];
+    inputData = [-5, "names", "numbers"];
     expectedOutput = {
       option: "n",
       count: 5,
-      files: ["file1.txt", "file2.txt"]
+      files: ["names", "numbers"]
     };
     assert.deepEqual(parseInput(inputData), expectedOutput);
   });
 
   it("should return organised option and count when both are given without spaces", function() {
-    inputData = ["-n10", "file1.txt", "file2.txt"];
+    inputData = ["-n10", "names", "numbers"];
     expectedOutput = {
       option: "n",
       count: 10,
-      files: ["file1.txt", "file2.txt"]
+      files: ["names", "numbers"]
     };
     assert.deepEqual(parseInput(inputData), expectedOutput);
 
-    inputData = ["-c10", "file1.txt", "file2.txt"];
+    inputData = ["-c10", "names", "numbers"];
     expectedOutput = {
       option: "c",
       count: 10,
-      files: ["file1.txt", "file2.txt"]
+      files: ["names", "numbers"]
     };
     assert.deepEqual(parseInput(inputData), expectedOutput);
   });
 
   it("should return organised option and count when both are given with spaces in between.", function() {
-    let inputData = ["-n", 12, "file1.txt", "file2.txt"];
+    let inputData = ["-n", 12, "names", "numbers"];
     let expectedOutput = {
       option: "n",
       count: 12,
-      files: ["file1.txt", "file2.txt"]
+      files: ["names", "numbers"]
     };
     assert.deepEqual(parseInput(inputData), expectedOutput);
 
-    inputData = ["-c", 15, "file1.txt", "file2.txt"];
+    inputData = ["-c", 15, "names", "numbers"];
     expectedOutput = {
       option: "c",
       count: 15,
-      files: ["file1.txt", "file2.txt"]
+      files: ["names", "numbers"]
     };
     assert.deepEqual(parseInput(inputData), expectedOutput);
   });
@@ -131,8 +145,6 @@ describe("parseInput", function() {
 describe("retrieveData", function() {
   let inputData;
   let expectedOutput;
-  const existsSync = fileName => true;
-  const readFileSync = filename => "yes readContent executed";
   const truthy = value => true;
 
   it("should return fetched data according to specified file details", function() {
@@ -148,11 +160,11 @@ describe("retrieveData", function() {
       delimeter: "\n",
       readFileSync,
       funcRef: truthy,
-      content: ["==> fileName <==", true],
+      content: ["==> numbers <==", true],
       existsSync,
       count: 2
     };
-    assert.deepEqual(retrieveData(inputData, "fileName"), expectedOutput);
+    assert.deepEqual(retrieveData(inputData, "numbers"), expectedOutput);
   });
 
   it("should return fetched data according to specified file details and should not change function reference", function() {
@@ -168,192 +180,140 @@ describe("retrieveData", function() {
       delimeter: "\n",
       readFileSync,
       funcRef: truthy,
-      content: ["==> fileName <==", true],
+      content: ["==> names <==", true],
       count: 2,
       existsSync
     };
-    assert.deepEqual(retrieveData(inputData, "fileName"), expectedOutput);
+    assert.deepEqual(retrieveData(inputData, "names"), expectedOutput);
   });
 });
 
 describe("Head function with single file", function() {
-  let readFileSync = function(x) {
-    return "mahesh\nswapnil\narnab\naftab\ndheeraj";
-  };
-  const existsSync = fileName => true;
-  const fs = { readFileSync: readFileSync, existsSync: existsSync };
-
   it("should return the first ten lines of file when count is not specified", function() {
     assert.deepEqual(
-      head(["file1.txt"], fs),
+      head(["names"], fs),
       "mahesh\nswapnil\narnab\naftab\ndheeraj"
     );
   });
 
   it("should return the given number of lines when only count is given", function() {
-    assert.deepEqual(head([-3, "file1.txt"], fs), "mahesh\nswapnil\narnab");
+    assert.deepEqual(head([-3, "names"], fs), "mahesh\nswapnil\narnab");
   });
 
   it("should return the given number of lines when count and option is given without spaces", function() {
-    assert.deepEqual(head(["-n2", "file1.txt"], fs), "mahesh\nswapnil");
+    assert.deepEqual(head(["-n2", "names"], fs), "mahesh\nswapnil");
   });
 
   it("should return the given number of lines when count and option is given with spaces", function() {
-    assert.deepEqual(head(["-n", "1", "file1.txt"], fs), "mahesh");
+    assert.deepEqual(head(["-n", "1", "names"], fs), "mahesh");
   });
 
   it("should return the given number of characters when count is given with spaces", function() {
-    assert.deepEqual(head(["-c", "3", "file1.txt"], fs), "mah");
+    assert.deepEqual(head(["-c", "3", "names"], fs), "mah");
   });
 
   it("should return the given number of characters when count is given without spaces", function() {
-    assert.deepEqual(head(["-c6", "file1.txt"], fs), "mahesh");
+    assert.deepEqual(head(["-c6", "names"], fs), "mahesh");
   });
 });
 
 describe("Head function with multiple file", function() {
-  let expectedOutput;
-  let existsSync = fileName => true;
-  let readFileSync = function(x) {
-    return "mahesh\nswapnil\narnab\naftab\ndheeraj";
-  };
-  const fs = { readFileSync: readFileSync, existsSync: existsSync };
   it("should return the first ten lines of file when count is not specified", function() {
     expectedOutput =
-      "==> file1.txt <==\nmahesh\nswapnil\narnab\naftab\ndheeraj\n\n==> file1.txt <==\nmahesh\nswapnil\narnab\naftab\ndheeraj";
-    assert.deepEqual(head(["file1.txt", "file1.txt"], fs), expectedOutput);
+      "==> names <==\nmahesh\nswapnil\narnab\naftab\ndheeraj\n\n==> names <==\nmahesh\nswapnil\narnab\naftab\ndheeraj";
+    assert.deepEqual(head(["names", "names"], fs), expectedOutput);
   });
 
   it("should return the given number of lines when only count is given", function() {
     expectedOutput =
-      "==> file1.txt <==\nmahesh\nswapnil\narnab\n\n==> file2.txt <==\nmahesh\nswapnil\narnab";
-    assert.deepEqual(head([-3, "file1.txt", "file2.txt"], fs), expectedOutput);
+      "==> names <==\nmahesh\nswapnil\narnab\n\n==> numbers <==\none\ntwo\nthree";
+    assert.deepEqual(head([-3, "names", "numbers"], fs), expectedOutput);
   });
 
   it("should return the given number of lines when count and option is given without spaces", function() {
     expectedOutput =
-      "==> file1.txt <==\nmahesh\nswapnil\n\n==> file2.txt <==\nmahesh\nswapnil";
-    assert.deepEqual(
-      head(["-n2", "file1.txt", "file2.txt"], fs),
-      expectedOutput
-    );
+      "==> names <==\nmahesh\nswapnil\n\n==> numbers <==\none\ntwo";
+    assert.deepEqual(head(["-n2", "names", "numbers"], fs), expectedOutput);
   });
 
   it("should return the given number of lines when count and option is given with spaces", function() {
-    expectedOutput = "==> file1.txt <==\nmahesh\n\n==> file2.txt <==\nmahesh";
-    assert.deepEqual(
-      head(["-n", "1", "file1.txt", "file2.txt"], fs),
-      expectedOutput
-    );
+    expectedOutput = "==> names <==\nmahesh\n\n==> numbers <==\none";
+    assert.deepEqual(head(["-n", "1", "names", "numbers"], fs), expectedOutput);
   });
 
   it("should return the given number of characters when count is given with spaces", function() {
-    expectedOutput = "==> file1.txt <==\nmah\n\n==> file2.txt <==\nmah";
-    assert.deepEqual(
-      head(["-c", "3", "file1.txt", "file2.txt"], fs),
-      expectedOutput
-    );
+    expectedOutput = "==> names <==\nmah\n\n==> numbers <==\none";
+    assert.deepEqual(head(["-c", "3", "names", "numbers"], fs), expectedOutput);
   });
 
   it("should return the given number of characters when count is given without spaces", function() {
-    expectedOutput = "==> file1.txt <==\nmahesh\n\n==> file2.txt <==\nmahesh";
-    assert.deepEqual(
-      head(["-c6", "file1.txt", "file2.txt"], fs),
-      expectedOutput
-    );
+    expectedOutput = "==> names <==\nmahesh\n\n==> numbers <==\none\ntw";
+    assert.deepEqual(head(["-c6", "names", "numbers"], fs), expectedOutput);
   });
 });
 
 describe("Head function errors handling", function() {
-  const readFileSync = filename => "mahesh\nswapnil\narnab";
-  let existsSync = fileName => true;
-  const fs = { readFileSync: readFileSync, existsSync: existsSync };
-
   it("should return the error message when number of lines is given zero with n without spaces", function() {
     expectedOutput = "head: illegal line count -- 0";
-    assert.deepEqual(
-      head(["-n0", "file1.txt", "file2.txt"], fs),
-      expectedOutput
-    );
+    assert.deepEqual(head(["-n0", "names", "numbers"], fs), expectedOutput);
   });
 
   it("should return the error message when  is count is given zero only without -c or -n", function() {
     expectedOutput = "head: illegal line count -- 0";
-    assert.deepEqual(
-      head(["-0", "file1.txt", "file2.txt"], fs),
-      expectedOutput
-    );
+    assert.deepEqual(head(["-0", "names", "numbers"], fs), expectedOutput);
   });
 
   it("should return the error message when  is count is given zero only without -c or -n", function() {
     expectedOutput = "head: illegal line count -- 0";
-    assert.deepEqual(head(["0", "file1.txt", "file2.txt"], fs), expectedOutput);
+    assert.deepEqual(head(["0", "names", "numbers"], fs), expectedOutput);
   });
 
   it("should return the error message when  is count is invalid with -c or -n", function() {
     expectedOutput = "head: illegal line count -- -12";
-    assert.deepEqual(
-      head(["-n-12", "file1.txt", "file2.txt"], fs),
-      expectedOutput
-    );
+    assert.deepEqual(head(["-n-12", "names", "numbers"], fs), expectedOutput);
   });
 
   it("should return the error message when  file is not present in the directory", function() {
-    fs.existsSync = function(fileName) {
-      return false;
-    };
     expectedOutput =
-      "head: README.mdafs: No such file or directory\nhead: file2.txt: No such file or directory";
+      "head: README.mdafs: No such file or directory\n==> numbers <==\none\ntwo\nthree";
     assert.deepEqual(
-      head(["-n3", "README.mdafs", "file2.txt"], fs),
+      head(["-n3", "README.mdafs", "numbers"], fs),
       expectedOutput
     );
   });
 
   it("should return the error message when option other than -c or -n is given ", function() {
-    existsSync = function(fileName) {
-      return false;
-    };
     expectedOutput =
       "head: illegal option -- x\nusage: head [-n lines | -c bytes] [file ...]";
     assert.deepEqual(
-      head(["-x3", "README.mdafs", "file2.txt"], fs),
+      head(["-x3", "README.mdafs", "numbers"], fs),
       expectedOutput
     );
   });
 
   it("should return the error message when option other than -c or -n is given ", function() {
-    existsSync = function(fileName) {
-      return false;
-    };
     expectedOutput =
       "head: illegal option -- z\nusage: head [-n lines | -c bytes] [file ...]";
     assert.deepEqual(
-      head(["-z", "README.mdafs", "file2.txt"], fs),
+      head(["-z", "README.mdafs", "numbers"], fs),
       expectedOutput
     );
   });
 
   it("should return the error message when option is correct but only one file which doesn't exist is given", function() {
-    existsSync = function(fileName) {
-      return false;
-    };
     expectedOutput = "head: README.mdafs: No such file or directory";
     assert.deepEqual(head(["-n3", "README.mdafs"], fs), expectedOutput);
   });
 
   it("should return the error message when -n or -c and then alphanumeric combination is given ", function() {
-    existsSync = function(fileName) {
-      return true;
-    };
     expectedOutput = "head: illegal line count -- u922";
     assert.deepEqual(
-      head(["-nu922", "README.mdafs", "file2.txt"], fs),
+      head(["-nu922", "README.mdafs", "numbers"], fs),
       expectedOutput
     );
     expectedOutput = "head: illegal byte count -- u922";
     assert.deepEqual(
-      head(["-cu922", "README.mdafs", "file2.txt"], fs),
+      head(["-cu922", "README.mdafs", "numbers"], fs),
       expectedOutput
     );
   });
