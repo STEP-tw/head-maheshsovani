@@ -1,3 +1,10 @@
+const fs = require('fs');
+const tail = require('./src/lib.js').tail;
+const main = function(args){
+  args = args.slice(2);
+  return tail(args,fs);
+}
+console.log(main(process.argv));
 /* 
   Usage:
   node ./tail.js file1

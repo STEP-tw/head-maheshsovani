@@ -1,8 +1,8 @@
-const extractLines = function(file, numberOfLines) {
+const extractHeadLines = function(file, numberOfLines) {
   return file.slice(0, numberOfLines).join("\n");
 };
 
-const extractCharacters = function(file, numberOfCharacters) {
+const extractHeadCharacters = function(file, numberOfCharacters) {
   return file.join("\n").slice(0, numberOfCharacters);
 };
 
@@ -60,7 +60,7 @@ const head = function(inputDetails, fs) {
   const existsSync = fs.existsSync;
   const readFileSync = fs.readFileSync;
   let { option, count, files } = parseInput(inputDetails);
-  let getOutput = { n: extractLines, c: extractCharacters };
+  let getOutput = { n: extractHeadLines, c: extractHeadCharacters };
   let funcRef = getOutput[option];
   let fileDetails = {
     content: [],
@@ -100,10 +100,20 @@ const head = function(inputDetails, fs) {
   return files.reduce(retrieveData, fileDetails).content.join("\n");
 };
 
+const extractTailLines = function(file, numberOfLines) {
+  return file.slice(-numberOfLines).join("\n");
+};
+
+const extractTailCharacters = function(file, numberOfCharacters) {
+  return file.join("\n").slice(-numberOfCharacters);
+};
+
 module.exports = {
-  extractLines,
-  extractCharacters,
+  extractHeadLines,
+  extractHeadCharacters,
   parseInput,
   retrieveData,
-  head
+  head,
+  extractTailLines,
+  extractTailCharacters
 };
