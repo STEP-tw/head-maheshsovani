@@ -43,7 +43,8 @@ const retrieveData = function(fileDetails, fileName) {
     delimeter,
     content,
     funcRef,
-    count
+    count,
+    funcName
   } = fileDetails;
 
   if (isPresent(fileName, existsSync)) {
@@ -52,7 +53,7 @@ const retrieveData = function(fileDetails, fileName) {
     fileDetails.delimeter = "\n";
     return fileDetails;
   }
-  content.push("head: " + fileName + ": No such file or directory");
+  content.push(funcName +": " + fileName + ": No such file or directory");
   return fileDetails;
 };
 
@@ -68,7 +69,8 @@ const head = function(inputDetails, fs) {
     count,
     funcRef,
     readFileSync,
-    existsSync
+    existsSync,
+    funcName : "head"
   };
 
   if (inputDetails[0] == 0 || count == 0) {
@@ -108,12 +110,49 @@ const extractTailCharacters = function(file, numberOfCharacters) {
   return file.join("\n").slice(-numberOfCharacters);
 };
 
+
+const tail = function(inputDetails, fs) {
+  const existsSync = fs.existsSync;
+  const readFileSync = fs.readFileSync;
+  let { option, count , files } = parseInput(inputDetails);
+  let getOutput = { n: extractTailLines, c: extractTailCharacters };
+  let funcRef = getOutput[option];
+  let fileDetails = {
+    content: [],
+    delimeter: "",
+    count : parseInt(count),
+    funcRef,
+    readFileSync,
+    existsSync,
+    funcName : "tail"
+  };
+  if (
+    inputDetails[0][0] == "-" &&
+    inputDetails[0][1] != "n" &&
+    inputDetails[0][1] != "c" &&
+    !parseInt(inputDetails[0])
+  ) { return
+    "tail: illegal option --  "+ inputDetails[0][1]+"\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]";
+  }
+  if (isNaN(count - 0)) {
+    return  "tail: illegal offset -- " + count
+  }
+  if (files.length == 1) {
+    if (!isPresent(files[0], existsSync)) {
+      return "tail: " + files[0] + ": No such file or directory";
+    }
+    return funcRef(readFileSync(files[0], "utf8").split("\n"), count );
+  }
+  return files.reduce(retrieveData, fileDetails).content.join("\n");
+};
+
 module.exports = {
   extractHeadLines,
   extractHeadCharacters,
   parseInput,
   retrieveData,
   head,
+  tail,
   extractTailLines,
   extractTailCharacters
 };

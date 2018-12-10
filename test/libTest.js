@@ -5,6 +5,7 @@ const {
   parseInput,
   retrieveData,
   head,
+  tail,
   extractTailLines,
   extractTailCharacters
 } = require("../src/lib.js");
@@ -385,4 +386,67 @@ describe("extract tail Characters Function", function() {
   });
 });
 
+describe("Tail function with single file", function() {
+  it("should return the first ten lines of file when count is not specified", function() {
+    assert.deepEqual(
+      tail(["names"], fs),
+      "mahesh\nswapnil\narnab\naftab\ndheeraj"
+    );
+  });
+
+  it("should return the given number of lines when only count is given", function() {
+    assert.deepEqual(tail([-3, "names"], fs), "arnab\naftab\ndheeraj");
+  });
+
+  it("should return the given number of lines when count and option is given without spaces", function() {
+    assert.deepEqual(tail(["-n2", "names"], fs), "aftab\ndheeraj");
+  });
+
+  it("should return the given number of lines when count and option is given with spaces", function() {
+    assert.deepEqual(tail(["-n", "1", "names"], fs), "dheeraj");
+  });
+
+  it("should return the given number of characters when count is given with spaces", function() {
+    assert.deepEqual(tail(["-c", "3", "names"], fs), "raj");
+  });
+
+  it("should return the given number of characters when count is given without spaces", function() {
+    assert.deepEqual(tail(["-c6", "names"], fs), "heeraj");
+  });
+});
+
+describe("Tail function with multiple file", function() {
+  it("should return the first ten lines of file when count is not specified", function() {
+    expectedOutput =
+      "==> names <==\nmahesh\nswapnil\narnab\naftab\ndheeraj\n\n==> names <==\nmahesh\nswapnil\narnab\naftab\ndheeraj";
+    assert.deepEqual(tail(["names", "names"], fs), expectedOutput);
+  });
+
+  it("should return the given number of lines when only count is given", function() {
+    expectedOutput =
+      "==> names <==\narnab\naftab\ndheeraj\n\n==> numbers <==\nthree\nfour\nfive";
+    assert.deepEqual(tail([-3, "names", "numbers"], fs), expectedOutput);
+  });
+
+  it("should return the given number of lines when count and option is given without spaces", function() {
+    expectedOutput =
+      "==> names <==\naftab\ndheeraj\n\n==> numbers <==\nfour\nfive";
+    assert.deepEqual(tail(["-n2", "names", "numbers"], fs), expectedOutput);
+  });
+
+  it("should return the given number of lines when count and option is given with spaces", function() {
+    expectedOutput = "==> names <==\ndheeraj\n\n==> numbers <==\nfive";
+    assert.deepEqual(tail(["-n", "1", "names", "numbers"], fs), expectedOutput);
+  });
+
+  it("should return the given number of characters when count is given with spaces", function() {
+    expectedOutput = "==> names <==\nraj\n\n==> numbers <==\nive";
+    assert.deepEqual(tail(["-c", "3", "names", "numbers"], fs), expectedOutput);
+  });
+
+  it("should return the given number of characters when count is given without spaces", function() {
+    expectedOutput = "==> names <==\nheeraj\n\n==> numbers <==\nr\nfive";
+    assert.deepEqual(tail(["-c6", "names", "numbers"], fs), expectedOutput);
+  });
+});
 
