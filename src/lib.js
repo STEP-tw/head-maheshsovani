@@ -82,11 +82,7 @@ const head = function(inputDetails, fs) {
     inputDetails[0][1] != "c" &&
     !parseInt(inputDetails[0])
   ) {
-    return (
-      "head: illegal option -- " +
-      inputDetails[0][1] +
-      "\nusage: head [-n lines | -c bytes] [file ...]"
-    );
+    return  "head: illegal option -- " + inputDetails[0][1] + "\nusage: head [-n lines | -c bytes] [file ...]";
   }
   if (isNaN(count - 0) || count < 1) {
     return option == "n"
@@ -131,8 +127,7 @@ const tail = function(inputDetails, fs) {
     inputDetails[0][1] != "n" &&
     inputDetails[0][1] != "c" &&
     !parseInt(inputDetails[0])
-  ) { return
-    "tail: illegal option --  "+ inputDetails[0][1]+"\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]";
+  ) { return "tail: illegal option --  "+ inputDetails[0][1]+"\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]";
   }
   if (isNaN(count - 0)) {
     return  "tail: illegal offset -- " + count
