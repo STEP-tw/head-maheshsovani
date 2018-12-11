@@ -1,3 +1,4 @@
+const parseInput = require('./parser.js').parseInput;
 const extractHeadLines = function(file, numberOfLines) {
   return file.slice(0, numberOfLines).join("\n");
 };
@@ -38,31 +39,6 @@ const illegalOptionError = function(fileName ){
     "\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]");
 };
 
-const parseInput = function(details) {
-  let organisedData = { option: "n", count: 10, files: details.slice(0) };
-  if (details[0] == "-n" || details[0] == "-c") {
-    organisedData = {
-      option: details[0][1],
-      count: details[1],
-      files: details.slice(2)
-    };
-  }
-  if (details[0][0] == "-" && details[0].length > 2) {
-    organisedData = {
-      option: details[0][1],
-      count: details[0].slice(2),
-      files: details.slice(1)
-    };
-  }
-  if (parseInt(details[0])) {
-    organisedData = {
-      option: "n",
-      count: Math.abs(details[0]),
-      files: details.slice(1)
-    };
-  }
-  return organisedData;
-};
 
 const singleFileContents = function(funcName ,fileDetails , fileName){
   const {count , existsSync , readFileSync , funcRef} = fileDetails;
@@ -109,9 +85,9 @@ const head = function(inputDetails, fs) {
   }
 
   if (files.length == 1) {
-      return singleFileContents("head",fileDetails , files[0]);
-    }
-    
+    return singleFileContents("head",fileDetails , files[0]);
+  }
+
   return files.reduce(retrieveData, fileDetails).content.join("\n");
 };
 
