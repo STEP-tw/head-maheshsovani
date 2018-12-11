@@ -36,6 +36,15 @@ const isPresent = function(fileName, existsSync) {
   return existsSync(fileName);
 };
 
+const isInvalidOption = function(inputDetails){
+  return (
+    inputDetails[0][0] == "-" &&
+    inputDetails[0][1] != "n" &&
+    inputDetails[0][1] != "c" &&
+    !parseInt(inputDetails[0])
+  );
+}
+
 const retrieveData = function(fileDetails, fileName) {
   let {
     readFileSync,
@@ -76,14 +85,10 @@ const head = function(inputDetails, fs) {
   if (inputDetails[0] == 0 || count == 0) {
     return "head: illegal line count -- 0";
   }
-  if (
-    inputDetails[0][0] == "-" &&
-    inputDetails[0][1] != "n" &&
-    inputDetails[0][1] != "c" &&
-    !parseInt(inputDetails[0])
-  ) {
+  if (isInvalidOption(inputDetails)){
     return  "head: illegal option -- " + inputDetails[0][1] + "\nusage: head [-n lines | -c bytes] [file ...]";
   }
+
   if (isNaN(count - 0) || count < 1) {
     return option == "n"
       ? "head: illegal line count -- " + count
@@ -106,15 +111,6 @@ const extractTailCharacters = function(file, numberOfCharacters) {
   return file.join("\n").slice(-numberOfCharacters);
 };
 
-const isInvalidOption = function(inputDetails){
-  return (
-    inputDetails[0][0] == "-" &&
-    inputDetails[0][1] != "n" &&
-    inputDetails[0][1] != "c" &&
-    !parseInt(inputDetails[0])
-  );
-}
-
 const tail = function(inputDetails, fs) {
   const existsSync = fs.existsSync;
   const readFileSync = fs.readFileSync;
@@ -130,6 +126,7 @@ const tail = function(inputDetails, fs) {
     existsSync,
     funcName : "tail"
   };
+
   if(inputDetails[0][0] == '-'  && inputDetails[0][1] == 0 || inputDetails[0][2] == 0 ){
     return '';
   }
@@ -138,8 +135,8 @@ const tail = function(inputDetails, fs) {
     return "tail: illegal option --  "+ inputDetails[0][1]+"\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]";
   }
 
-  if (isNaN(count - 0)) {
-    return  "tail: illegal offset -- " + count
+  if (isNaN(count)) {
+    return  "tail: illegal offset -- " + count;
   }
 
   if (files.length == 1) {
