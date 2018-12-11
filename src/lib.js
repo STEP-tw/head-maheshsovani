@@ -106,6 +106,14 @@ const extractTailCharacters = function(file, numberOfCharacters) {
   return file.join("\n").slice(-numberOfCharacters);
 };
 
+const isInvalidOption = function(inputDetails){
+  return (
+    inputDetails[0][0] == "-" &&
+    inputDetails[0][1] != "n" &&
+    inputDetails[0][1] != "c" &&
+    !parseInt(inputDetails[0])
+  );
+}
 
 const tail = function(inputDetails, fs) {
   const existsSync = fs.existsSync;
@@ -126,12 +134,8 @@ const tail = function(inputDetails, fs) {
     return '';
   }
 
-  if (
-    inputDetails[0][0] == "-" &&
-    inputDetails[0][1] != "n" &&
-    inputDetails[0][1] != "c" &&
-    !parseInt(inputDetails[0])
-  ) { return "tail: illegal option --  "+ inputDetails[0][1]+"\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]";
+  if (isInvalidOption(inputDetails)){
+    return "tail: illegal option --  "+ inputDetails[0][1]+"\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]";
   }
 
   if (isNaN(count - 0)) {
