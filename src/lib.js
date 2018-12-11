@@ -6,6 +6,38 @@ const extractHeadCharacters = function(file, numberOfCharacters) {
   return file.join("\n").slice(0, numberOfCharacters);
 };
 
+const extractTailLines = function(file, numberOfLines) {
+  return file.slice(-numberOfLines).join("\n");
+};
+
+const extractTailCharacters = function(file, numberOfCharacters) {
+  return file.join("\n").slice(-numberOfCharacters);
+};
+
+const isPresent = function(fileName, existsSync) {
+  return existsSync(fileName);
+};
+
+const isInvalidOption = function(inputDetails){
+  return (
+    inputDetails[0][0] == "-" &&
+    inputDetails[0][1] != "n" &&
+    inputDetails[0][1] != "c" &&
+    !parseInt(inputDetails[0])
+  );
+};
+
+const hasZero = function (inputDetails){
+  return (inputDetails[0][0] == '-'  
+    && inputDetails[0][1] == 0 
+    || inputDetails[0][2] == 0 );
+};
+
+const illegalOptionError = function(fileName ){
+  return ("tail: illegal option --  "+ fileName+
+    "\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]");
+};
+
 const parseInput = function(details) {
   let organisedData = { option: "n", count: 10, files: details.slice(0) };
   if (details[0] == "-n" || details[0] == "-c") {
@@ -32,29 +64,9 @@ const parseInput = function(details) {
   return organisedData;
 };
 
-const isPresent = function(fileName, existsSync) {
-  return existsSync(fileName);
-};
-
-const isInvalidOption = function(inputDetails){
-  return (
-    inputDetails[0][0] == "-" &&
-    inputDetails[0][1] != "n" &&
-    inputDetails[0][1] != "c" &&
-    !parseInt(inputDetails[0])
-  );
-}
-
 const retrieveData = function(fileDetails, fileName) {
-  let {
-    readFileSync,
-    existsSync,
-    delimeter,
-    content,
-    funcRef,
-    count,
-    funcName
-  } = fileDetails;
+  let { readFileSync, existsSync, delimeter, content,
+    funcRef, count, funcName } = fileDetails;
 
   if (isPresent(fileName, existsSync)) {
     content.push(delimeter + "==> " + fileName + " <==");
@@ -72,15 +84,8 @@ const head = function(inputDetails, fs) {
   let { option, count, files } = parseInput(inputDetails);
   let getOutput = { n: extractHeadLines, c: extractHeadCharacters };
   let funcRef = getOutput[option];
-  let fileDetails = {
-    content: [],
-    delimeter: "",
-    count,
-    funcRef,
-    readFileSync,
-    existsSync,
-    funcName : "head"
-  };
+  let fileDetails = { content: [], delimeter: "", count,
+    funcRef, readFileSync, existsSync, funcName : "head" };
 
   if (inputDetails[0] == 0 || count == 0) {
     return "head: illegal line count -- 0";
@@ -89,11 +94,12 @@ const head = function(inputDetails, fs) {
     return  "head: illegal option -- " + inputDetails[0][1] + "\nusage: head [-n lines | -c bytes] [file ...]";
   }
 
-  if (isNaN(count - 0) || count < 1) {
+  if (isNaN(count) || count < 1) {
     return option == "n"
       ? "head: illegal line count -- " + count
       : "head: illegal byte count -- " + count;
   }
+
   if (files.length == 1) {
     if (!isPresent(files[0], existsSync)) {
       return "head: " + files[0] + ": No such file or directory";
@@ -103,36 +109,21 @@ const head = function(inputDetails, fs) {
   return files.reduce(retrieveData, fileDetails).content.join("\n");
 };
 
-const extractTailLines = function(file, numberOfLines) {
-  return file.slice(-numberOfLines).join("\n");
-};
-
-const extractTailCharacters = function(file, numberOfCharacters) {
-  return file.join("\n").slice(-numberOfCharacters);
-};
-
 const tail = function(inputDetails, fs) {
   const existsSync = fs.existsSync;
   const readFileSync = fs.readFileSync;
   let { option, count , files } = parseInput(inputDetails);
   let getOutput = { n: extractTailLines, c: extractTailCharacters };
   let funcRef = getOutput[option];
-  let fileDetails = {
-    content: [],
-    delimeter: "",
-    count : parseInt(count),
-    funcRef,
-    readFileSync,
-    existsSync,
-    funcName : "tail"
-  };
+  let fileDetails = { content: [], delimeter: "", count : parseInt(count),
+    funcRef, readFileSync, existsSync, funcName : "tail" };
 
-  if(inputDetails[0][0] == '-'  && inputDetails[0][1] == 0 || inputDetails[0][2] == 0 ){
+  if(hasZero(inputDetails)){
     return '';
   }
 
   if (isInvalidOption(inputDetails)){
-    return "tail: illegal option --  "+ inputDetails[0][1]+"\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]";
+    return illegalOptionError(inputDetails[0][1] ) 
   }
 
   if (isNaN(count)) {
