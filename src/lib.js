@@ -63,8 +63,7 @@ const retrieveData = function(fileDetails, fileName) {
 };
 
 const head = function(inputDetails, fs) {
-  const existsSync = fs.existsSync;
-  const readFileSync = fs.readFileSync;
+  const { existsSync , readFileSync }  = fs ;
   let { option, count, files } = parseInput(inputDetails);
   let getOutput = { n: extractHeadLines, c: extractHeadCharacters };
   let funcRef = getOutput[option];
@@ -92,8 +91,7 @@ const head = function(inputDetails, fs) {
 };
 
 const tail = function(inputDetails, fs) {
-  const existsSync = fs.existsSync;
-  const readFileSync = fs.readFileSync;
+  const { existsSync , readFileSync } = fs
   let { option, count , files } = parseInput(inputDetails);
   let getOutput = { n: extractTailLines, c: extractTailCharacters };
   let funcRef = getOutput[option];
