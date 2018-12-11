@@ -459,7 +459,7 @@ describe("Tail function errors handling", function() {
     assert.deepEqual(tail(["-0", "names", "numbers"], fs), '');
   });
 
-     it("should return the error message when  file is not present in the directory", function() {
+  it("should return the error message when  file is not present in the directory", function() {
     expectedOutput =
       "tail: README.mdafs: No such file or directory\n==> numbers <==\nthree\nfour\nfive";
     assert.deepEqual(
