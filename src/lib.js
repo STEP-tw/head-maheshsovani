@@ -49,7 +49,7 @@ const retrieveData = function(fileDetails, fileName) {
 
   if (isPresent(fileName, existsSync)) {
     content.push(delimeter + "==> " + fileName + " <==");
-    content.push(funcRef(readFileSync(fileName, "utf8").split("\n"), count));
+    content.push(funcRef(readFileSync(fileName, "utf8").split("\n"),count));
     fileDetails.delimeter = "\n";
     return fileDetails;
   }
@@ -122,6 +122,10 @@ const tail = function(inputDetails, fs) {
     existsSync,
     funcName : "tail"
   };
+  if(inputDetails[0][0] == '-'  && inputDetails[0][1] == 0 || inputDetails[0][2] == 0 ){
+    return '';
+  }
+
   if (
     inputDetails[0][0] == "-" &&
     inputDetails[0][1] != "n" &&
@@ -129,15 +133,18 @@ const tail = function(inputDetails, fs) {
     !parseInt(inputDetails[0])
   ) { return "tail: illegal option --  "+ inputDetails[0][1]+"\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]";
   }
+
   if (isNaN(count - 0)) {
     return  "tail: illegal offset -- " + count
   }
+
   if (files.length == 1) {
     if (!isPresent(files[0], existsSync)) {
       return "tail: " + files[0] + ": No such file or directory";
-    }
-    return funcRef(readFileSync(files[0], "utf8").split("\n"), count );
+    }  
+    return funcRef(readFileSync(files[0], "utf8").split("\n"),count);
   }
+
   return files.reduce(retrieveData, fileDetails).content.join("\n");
 };
 

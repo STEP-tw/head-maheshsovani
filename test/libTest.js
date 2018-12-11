@@ -450,3 +450,57 @@ describe("Tail function with multiple file", function() {
   });
 });
 
+describe("Tail function errors handling", function() {
+  it("should return the error message when number of lines is given zero with n without spaces", function() {
+    assert.deepEqual(tail(["-n0", "names", "numbers"], fs), '');
+  });
+
+  it("should return the error message when  is count is given zero only without -c or -n", function() {
+    assert.deepEqual(tail(["-0", "names", "numbers"], fs), '');
+  });
+
+     it("should return the error message when  file is not present in the directory", function() {
+    expectedOutput =
+      "tail: README.mdafs: No such file or directory\n==> numbers <==\nthree\nfour\nfive";
+    assert.deepEqual(
+      tail(["-n3", "README.mdafs", "numbers"], fs),
+      expectedOutput
+    );
+  });
+
+  it("should return the error message when option other than -c or -n is given ", function() {
+    expectedOutput =
+      "tail: illegal option --  x\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]"
+    assert.deepEqual(
+      tail(["-x3", "README.mdafs", "numbers"], fs),
+      expectedOutput
+    );
+  });
+
+  it("should return the error message when option other than -c or -n is given ", function() {
+    expectedOutput =
+      "tail: illegal option --  z\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]"
+    assert.deepEqual(
+      tail(["-z", "README.mdafs", "numbers"], fs),
+      expectedOutput
+    );
+  });
+
+  it("should return the error message when option is correct but only one file which doesn't exist is given", function() {
+    expectedOutput = "tail: README.mdafs: No such file or directory";
+    assert.deepEqual(tail(["-n3", "README.mdafs"], fs), expectedOutput);
+  });
+
+  it("should return the error message when -n or -c and then alphanumeric combination is given ", function() {
+    expectedOutput = "tail: illegal offset -- u922";
+    assert.deepEqual(
+      tail(["-nu922", "README.mdafs", "numbers"], fs),
+      expectedOutput
+    );
+    expectedOutput = "tail: illegal offset -- u922";
+    assert.deepEqual(
+      tail(["-cu922", "README.mdafs", "numbers"], fs),
+      expectedOutput
+    );
+  });
+});
