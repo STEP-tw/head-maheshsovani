@@ -2,13 +2,13 @@ const assert = require("assert");
 const {
   extractHeadLines,
   extractHeadCharacters,
-  parseInput,
   retrieveData,
   head,
   tail,
   extractTailLines,
   extractTailCharacters
 } = require("../src/lib.js");
+const { parseInput } = require("../src/parser.js");
 
 const readFileSync = function(fileName) {
   let fileContents = {
