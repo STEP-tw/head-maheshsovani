@@ -20,8 +20,8 @@ const isPresent = function (fileName, existsSync) {
   return existsSync(fileName);
 };
 
-const singleFileContents = function (funcName, fileDetails, fileName) {
-  const { count, existsSync, readFileSync, funcRef } = fileDetails;
+const singleFileContents = function (fileDetails, fileName) {
+  const { count, existsSync, readFileSync, funcRef , funcName } = fileDetails;
   if (!isPresent(fileName, existsSync)) {
     return (funcName + ": " + fileName + ": No such file or directory");
   }
@@ -42,7 +42,19 @@ const retrieveData = function (fileDetails, fileName) {
   return fileDetails;
 };
 
+const multipleFileContents = function(fileDetails){
+ return fileDetails["files"].reduce(retrieveData, fileDetails).content.join("\n");
+}
 
+const generateContent = function(fileDetails){
+  let files = fileDetails.files;
+  let checkOne = number => number==1;
+  let selectContentGenerator = {
+    true : singleFileContents(fileDetails,files[0]),
+    false : multipleFileContents(fileDetails)
+  }
+  return selectContentGenerator[checkOne(files.length)]
+}
 
 const head = function (inputDetails, fs) {
   const { existsSync, readFileSync } = fs;
@@ -50,16 +62,15 @@ const head = function (inputDetails, fs) {
   let getOutput = { n: extractHeadLines, c: extractHeadCharacters };
   let funcRef = getOutput[option];
   let fileDetails = {
-    content: [], delimeter: "", count,
+    content: [], delimeter: "", count,files,
     funcRef, readFileSync, existsSync, funcName: "head"
   };
+
   if(manageHeadErrors(inputDetails) != undefined ){
     return manageHeadErrors(inputDetails);
   }
-  if (files.length == 1) {
-    return singleFileContents("head", fileDetails, files[0]);
-  }
-  return files.reduce(retrieveData, fileDetails).content.join("\n");
+  
+  return generateContent(fileDetails);
 };
 
 const tail = function (inputDetails, fs) {
@@ -68,18 +79,15 @@ const tail = function (inputDetails, fs) {
   let getOutput = { n: extractTailLines, c: extractTailCharacters };
   let funcRef = getOutput[option];
   let fileDetails = {
-    content: [], delimeter: "", count: parseInt(count),
+    content: [], delimeter: "", count: parseInt(count),files,
     funcRef, readFileSync, existsSync, funcName: "tail"
   };
+
   if(manageTailErrors(inputDetails) != undefined ){
     return manageTailErrors(inputDetails);
   }
 
-  if (files.length == 1) {
-    return singleFileContents("tail", fileDetails, files[0]);
-  }
-
-  return files.reduce(retrieveData, fileDetails).content.join("\n");
+  return generateContent(fileDetails);
 };
 
 module.exports = {
