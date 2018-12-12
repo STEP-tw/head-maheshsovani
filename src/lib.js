@@ -34,7 +34,7 @@ const hasZero = function (inputDetails){
     || inputDetails[0][2] == 0 );
 };
 
-const illegalOptionError = function(fileName ){
+const illegalOPtionTail = function(fileName ){
   return ("tail: illegal option --  "+ fileName+
     "\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]");
 };
@@ -61,6 +61,10 @@ const retrieveData = function(fileDetails, fileName) {
   content.push(funcName +": " + fileName + ": No such file or directory");
   return fileDetails;
 };
+const illegalOptionHead = function(option){
+  return ( "head: illegal option -- "+ option + 
+  "\nusage: head [-n lines | -c bytes] [file ...]" );
+}
 
 const head = function(inputDetails, fs) {
   const { existsSync , readFileSync }  = fs ;
@@ -74,7 +78,7 @@ const head = function(inputDetails, fs) {
     return "head: illegal line count -- 0";
   }
   if (isInvalidOption(inputDetails)){
-    return  "head: illegal option -- " + inputDetails[0][1] + "\nusage: head [-n lines | -c bytes] [file ...]";
+    return  illegalOptionHead(inputDetails[0][1]);
   }
 
   if (isNaN(count) || count < 1) {
@@ -103,7 +107,7 @@ const tail = function(inputDetails, fs) {
   }
 
   if (isInvalidOption(inputDetails)){
-    return illegalOptionError(inputDetails[0][1] ) 
+    return illegalOPtionTail(inputDetails[0][1] ) 
   }
 
   if (isNaN(count)) {
