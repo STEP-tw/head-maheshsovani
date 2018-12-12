@@ -1,4 +1,4 @@
-const parseInput = function(details) {
+const parseInput = function (details) {
   let organisedData = { option: "n", count: 10, files: details.slice(0) };
   if (details[0] == "-n" || details[0] == "-c") {
     organisedData = {
@@ -24,4 +24,4 @@ const parseInput = function(details) {
   return organisedData;
 };
 
-module.exports = {parseInput}
+module.exports = { parseInput }
