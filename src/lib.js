@@ -34,12 +34,6 @@ const hasZero = function (inputDetails){
     || inputDetails[0][2] == 0 );
 };
 
-const illegalOPtionTail = function(fileName ){
-  return ("tail: illegal option --  "+ fileName+
-    "\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]");
-};
-
-
 const singleFileContents = function(funcName ,fileDetails , fileName){
   const {count , existsSync , readFileSync , funcRef} = fileDetails;
   if (!isPresent(fileName, existsSync)) {
@@ -61,9 +55,20 @@ const retrieveData = function(fileDetails, fileName) {
   content.push(funcName +": " + fileName + ": No such file or directory");
   return fileDetails;
 };
-const illegalOptionHead = function(option){
-  return ( "head: illegal option -- "+ option + 
-  "\nusage: head [-n lines | -c bytes] [file ...]" );
+
+const selectIllegalOption = function(funcName , option){
+ let errors = { "head" : "head: illegal option -- "+ option + 
+  "\nusage: head [-n lines | -c bytes] [file ...]",
+  "tail" : "tail: illegal option --  "+ option +
+    "\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]"
+ }
+ return errors[funcName];
+};
+
+const checkValidOption = function(functionName , inputDetails){
+  if(isInvalidOption(inputDetails)){
+    return selectIllegalOption(functionName,inputDetails[0][1])
+  }
 }
 
 const head = function(inputDetails, fs) {
@@ -77,8 +82,9 @@ const head = function(inputDetails, fs) {
   if (inputDetails[0] == 0 || count == 0) {
     return "head: illegal line count -- 0";
   }
-  if (isInvalidOption(inputDetails)){
-    return  illegalOptionHead(inputDetails[0][1]);
+
+  if(checkValidOption("head" , inputDetails)){
+    return checkValidOption( "head" , inputDetails);
   }
 
   if (isNaN(count) || count < 1) {
@@ -106,8 +112,8 @@ const tail = function(inputDetails, fs) {
     return '';
   }
 
-  if (isInvalidOption(inputDetails)){
-    return illegalOPtionTail(inputDetails[0][1] ) 
+  if(checkValidOption("tail" , inputDetails)){
+    return checkValidOption( "tail" , inputDetails);
   }
 
   if (isNaN(count)) {
