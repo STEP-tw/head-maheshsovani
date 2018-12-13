@@ -65,12 +65,7 @@ const head = function (inputDetails, fs) {
     content: [], delimeter: "", count,files,
     funcRef, readFileSync, existsSync, funcName: "head"
   };
-
-  if(manageHeadErrors(inputDetails) != undefined ){
-    return manageHeadErrors(inputDetails);
-  }
-  
-  return generateContent(fileDetails);
+  return manageHeadErrors(inputDetails) || generateContent(fileDetails);
 };
 
 const tail = function (inputDetails, fs) {
