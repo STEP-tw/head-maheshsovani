@@ -1,13 +1,14 @@
 const parseInput = function (details) {
   let defaultParameters = { option: "n", count: 10, files: details };
-  if (details[0] == "-n" || details[0] == "-c") {
+  
+  if (isValidOption(details[0])) {
     return {
       option: details[0][1],
       count: details[1],
       files: details.slice(2)
     };
   }
-  if (details[0][0] == "-" && details[0].length > 2) {
+  if (isOptionWithCount(details[0])) {
     return {
       option: details[0][1],
       count: details[0].slice(2),
@@ -22,6 +23,14 @@ const parseInput = function (details) {
     };
   }
   return defaultParameters;
+};
+
+const isValidOption = function(option){
+  return ["-n","-c"].includes(option); 
+};
+
+const isOptionWithCount = function(details){
+  return ( details[0]==='-' && details.length > 2 );
 };
 
 module.exports = { parseInput }
