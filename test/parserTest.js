@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { parseInput } = require("../src/parser.js")
+const { parseInput , isOptionWithCount ,isValidOption } = require("../src/parser.js")
 describe("parseInput", function () {
   let inputData;
   let expectedOutput;
@@ -54,5 +54,28 @@ describe("parseInput", function () {
       files: ["names", "numbers"]
     };
     assert.deepEqual(parseInput(inputData), expectedOutput);
+  });
+});
+
+describe("isValidOption Function", function () {
+  it("should return true when option given is either -n or -c ", function () {
+    assert.equal(isValidOption("-n"), true);
+    assert.equal(isValidOption("-c"), true);
+  });
+
+  it("should return false when option given is neither -n nor -c", function () {
+    assert.equal(isValidOption("-x"), false);
+    assert.equal(isValidOption("-y"), false);
+  });
+});
+
+describe("isOptionWithCount", function() {
+  it("should return true when option and count is given without spaces", function() {
+    assert.equal(isOptionWithCount("-n2"),true)
+    assert.equal(isOptionWithCount("-c2"),true)
+  });
+  it("should return false when only option is given without count", function () {
+    assert.deepEqual(isOptionWithCount("-3"), false);
+    assert.deepEqual(isOptionWithCount("-1"), false);
   });
 });

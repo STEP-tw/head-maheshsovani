@@ -1,6 +1,6 @@
 const parseInput = function (details) {
   let defaultParameters = { option: "n", count: 10, files: details };
-  
+
   if (isValidOption(details[0])) {
     return {
       option: details[0][1],
@@ -33,4 +33,4 @@ const isOptionWithCount = function(details){
   return ( details[0]==='-' && details.length > 2 );
 };
 
-module.exports = { parseInput }
+module.exports = { parseInput , isOptionWithCount ,isValidOption }
