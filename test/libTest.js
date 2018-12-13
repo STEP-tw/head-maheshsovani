@@ -515,6 +515,7 @@ describe("isPresent", function () {
     assert.deepEqual(isPresent("reader.js", existsSync), false)
   });
 });
+
 describe("singleFileContents", function () {
   let truthy = x => true
   fileDetails = {
