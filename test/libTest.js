@@ -10,7 +10,6 @@ const {
   isPresent,
   singleFileContents
 } = require("../src/lib.js");
-const { parseInput } = require("../src/parser.js");
 
 const readFileSync = function (fileName) {
   let fileContents = {
