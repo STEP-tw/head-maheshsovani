@@ -42,13 +42,12 @@ const retrieveData = function (fileDetails, fileName) {
   return fileDetails;
 };
 
-const multipleFileContents = function(fileDetails){
- return fileDetails["files"].reduce(retrieveData, fileDetails).content.join("\n");
-}
-
 const generateContent = function(fileDetails){
   let files = fileDetails.files;
   let checkOne = number => number==1;
+  let multipleFileContents = (fileDetails) => {
+    return fileDetails["files"].reduce(retrieveData, fileDetails).content.join("\n")
+  }
   let selectContentGenerator = {
     true : singleFileContents(fileDetails,files[0]),
     false : multipleFileContents(fileDetails)
@@ -88,10 +87,12 @@ const tail = function (inputDetails, fs) {
 module.exports = {
   extractHeadLines,
   extractHeadCharacters,
-  parseInput,
   retrieveData,
   head,
   tail,
   extractTailLines,
-  extractTailCharacters
+  extractTailCharacters,
+  isPresent,
+  singleFileContents,
+  generateContent
 };

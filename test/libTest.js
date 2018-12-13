@@ -6,7 +6,9 @@ const {
   head,
   tail,
   extractTailLines,
-  extractTailCharacters
+  extractTailCharacters,
+  isPresent,
+  singleFileContents
 } = require("../src/lib.js");
 const { parseInput } = require("../src/parser.js");
 
@@ -502,5 +504,36 @@ describe("Tail function errors handling", function () {
       tail(["-cu922", "README.mdafs", "numbers"], fs),
       expectedOutput
     );
+  });
+});
+
+describe("isPresent", function () {
+  it("should return true if file is present", function () {
+    assert.deepEqual(isPresent("numbers", existsSync), true)
+  });
+  it("should return false if file is not present", function () {
+    assert.deepEqual(isPresent("reader.js", existsSync), false)
+  });
+});
+describe("singleFileContents", function () {
+  let truthy = x => true
+  fileDetails = {
+    readFileSync,
+    funcRef: truthy,
+    count: 2,
+    existsSync,
+    funcName: "head"
+  }
+  it("should return the content if file is present", function () {
+    assert.deepEqual(singleFileContents(fileDetails, "numbers"), true);
+  });
+  it("should return error for head function if file is not present", function () {
+    expectedOutput = "head: wrongFile.js: No such file or directory"
+    assert.deepEqual(singleFileContents(fileDetails, "wrongFile.js") , expectedOutput);
+  });
+  it("should return error for head function if file is not present", function () {
+    fileDetails.funcName = "tail";
+    expectedOutput = "tail: wrong.js: No such file or directory"
+    assert.deepEqual(singleFileContents(fileDetails, "wrong.js") , expectedOutput);
   });
 });
