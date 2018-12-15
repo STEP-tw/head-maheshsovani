@@ -8,7 +8,8 @@ const {
   extractTailCharacters,
   isPresent,
   isValidSingleFile,
-  generateRequiredContent
+  generateRequiredContent,
+  generateHeader
 } = require("../src/lib.js");
 
 const readFileSync = function (fileName) {
@@ -477,5 +478,20 @@ describe("generateRequiredContent function for multiple files", function () {
     inputData = { count: 10, files: ["names", "numbers"], funcName: "tail", funcRef: extractTailCharacters };
     expectedOutput = "==> names <==\nab\ndheeraj\n\n==> numbers <==\n\nfour\nfive";
     assert.deepEqual(generateRequiredContent(inputData, fs), expectedOutput);
+  });
+});
+
+describe("generateHeader", function () {
+
+  it("should create a head line when no file name is given", function () {
+    assert.deepEqual(generateHeader(), "==> undefined <==\n");
+  });
+
+  it("should create a head line when file name is empty", function () {
+    assert.deepEqual(generateHeader(""), "==>  <==\n");
+  });
+
+  it("should create a head line using a file name", function () {
+    assert.deepEqual(generateHeader("numbers.js"), "==> numbers.js <==\n");
   });
 });

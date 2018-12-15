@@ -4,6 +4,10 @@ const extractHeadLines = function (file, numberOfLines) {
   return file.slice(0, numberOfLines).join("\n");
 };
 
+const generateHeader = function (fileName) {
+	return "==> " + fileName + " <==\n";
+};
+
 const extractHeadCharacters = function (file, numberOfCharacters) {
   return file.join("\n").slice(0, numberOfCharacters);
 };
@@ -37,7 +41,7 @@ const generateRequiredContent = function (details , fs) {
   for(let file of files){
     let fileContent = funcName + ": " + file + ": No such file or directory" 
     if(isPresent(file,existsSync)){
-      fileContent = delimeter + "==> " + file + " <==\n";
+      fileContent = delimeter + generateHeader(file);
       fileContent += funcRef(readFileSync(file, "utf8").split("\n"), count);
       delimeter = "\n"
     }
@@ -76,5 +80,6 @@ module.exports = {
   extractTailCharacters,
   isPresent,
   generateRequiredContent,
-  isValidSingleFile
+  isValidSingleFile,
+  generateHeader
 };
