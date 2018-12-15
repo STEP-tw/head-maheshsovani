@@ -20,6 +20,10 @@ const isPresent = function (fileName, existsSync) {
   return existsSync(fileName);
 };
 
+const isValidSingleFile = function (files, existsSync) {
+  return files.length == 1 && existsSync(files[0]);
+}
+
 const singleFileContents = function (fileDetails, fileName) {
   const { count, existsSync, readFileSync, funcRef, funcName } = fileDetails;
   if (!isPresent(fileName, existsSync)) {
@@ -95,5 +99,6 @@ module.exports = {
   extractTailCharacters,
   isPresent,
   singleFileContents,
-  generateContent
+  generateContent,
+  isValidSingleFile
 };

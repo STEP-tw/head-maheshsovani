@@ -8,7 +8,8 @@ const {
   extractTailLines,
   extractTailCharacters,
   isPresent,
-  singleFileContents
+  singleFileContents,
+  isValidSingleFile
 } = require("../src/lib.js");
 
 const readFileSync = function (fileName) {
@@ -456,6 +457,24 @@ describe("isPresent", function () {
   it("should return false if file is not present", function () {
     assert.deepEqual(isPresent("reader.js", existsSync), false)
   });
+});
+
+describe('singleValidFile', function() {
+	it('should return true if it has a single file and which is present', function() {
+		assert.deepEqual(isValidSingleFile(['numbers'], existsSync), true);
+	});
+
+	it('should return false if it has more than one file', function() {
+		assert.deepEqual(isValidSingleFile(['names', 'numbers'], existsSync), false);
+  });
+
+  it('should return false if it has a single file and which is not present', function() {
+		assert.deepEqual(isValidSingleFile(['abcd.js'], existsSync), false);
+	});
+
+	it('should return false if it has more than one file and some are not present', function() {
+		assert.deepEqual(isValidSingleFile(['numbers','abc.js'], existsSync), false);
+	});
 });
 
 describe("singleFileContents", function () {
