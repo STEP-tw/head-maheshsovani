@@ -24,81 +24,57 @@ const isValidSingleFile = function (files, existsSync) {
   return files.length == 1 && existsSync(files[0]);
 }
 
-const singleFileContents = function (fileDetails, fileName) {
-  const { count, existsSync, readFileSync, funcRef, funcName } = fileDetails;
-  if (!isPresent(fileName, existsSync)) {
-    return (funcName + ": " + fileName + ": No such file or directory");
-  }
-  let fileContent = readFileSync(fileName, "utf8").split("\n")
-  return funcRef(fileContent, count);
-}
+const generateRequiredContent = function (details , fs) {
+  const { existsSync, readFileSync } = fs;
+  const { files,funcName, count, funcRef } = details;
+  let delimeter = "";
+  let content = [];
 
-const retrieveData = function (fileDetails, fileName) {
-  let { readFileSync, existsSync, delimeter, content,
-    funcRef, count, funcName } = fileDetails;
+  if(isValidSingleFile(files ,existsSync)){
+    return funcRef(readFileSync(files[0], "utf8").split("\n"),count);
+  }
 
-  if (isPresent(fileName, existsSync)) {
-    content.push(delimeter + "==> " + fileName + " <==");
-    content.push(funcRef(readFileSync(fileName, "utf8").split("\n"), count));
-    fileDetails.delimeter = "\n";
-    return fileDetails;
+  for(let file of files){
+    let fileContent = funcName + ": " + file + ": No such file or directory" 
+    if(isPresent(file,existsSync)){
+      fileContent = delimeter + "==> " + file + " <==\n";
+      fileContent += funcRef(readFileSync(file, "utf8").split("\n"), count);
+      delimeter = "\n"
+    }
+    content.push(fileContent);
   }
-  content.push(funcName + ": " + fileName + ": No such file or directory");
-  return fileDetails;
-};
-
-const generateContent = function (fileDetails) {
-  let files = fileDetails.files;
-  let checkOne = number => number == 1;
-  let multipleFileContents = (fileDetails) => {
-    return fileDetails["files"].reduce(retrieveData, fileDetails).content.join("\n")
-  }
-  let selectContentGenerator = {
-    true: singleFileContents(fileDetails, files[0]),
-    false: multipleFileContents(fileDetails)
-  }
-  return selectContentGenerator[checkOne(files.length)]
+  return content.join("\n");
 }
 
 const head = function (inputDetails, fs) {
-  const { existsSync, readFileSync } = fs;
   let { option, count, files } = parseInput(inputDetails);
   let getOutput = { n: extractHeadLines, c: extractHeadCharacters };
   let funcRef = getOutput[option];
-  let fileDetails = {
-    content: [], delimeter: "", count, files,
-    funcRef, readFileSync, existsSync, funcName: "head"
-  };
-  return manageHeadErrors(inputDetails) || generateContent(fileDetails);
+  let fileDetails = {count, files, funcRef, funcName: "head"};
+  return manageHeadErrors(inputDetails) || generateRequiredContent(fileDetails,fs);
 };
 
 const tail = function (inputDetails, fs) {
-  const { existsSync, readFileSync } = fs
   let { option, count, files } = parseInput(inputDetails);
   let getOutput = { n: extractTailLines, c: extractTailCharacters };
   let funcRef = getOutput[option];
-  let fileDetails = {
-    content: [], delimeter: "", count: parseInt(count), files,
-    funcRef, readFileSync, existsSync, funcName: "tail"
-  };
+  let fileDetails = {count: parseInt(count), files,funcRef , funcName: "tail" };
 
   if (manageTailErrors(inputDetails) != undefined) {
     return manageTailErrors(inputDetails);
   }
 
-  return generateContent(fileDetails);
+  return generateRequiredContent(fileDetails, fs);
 };
 
 module.exports = {
   extractHeadLines,
   extractHeadCharacters,
-  retrieveData,
   head,
   tail,
   extractTailLines,
   extractTailCharacters,
   isPresent,
-  singleFileContents,
-  generateContent,
+  generateRequiredContent,
   isValidSingleFile
 };

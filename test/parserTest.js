@@ -11,10 +11,10 @@ describe("parseInput", function () {
   });
 
   it("should give default option -n and count as given when option is not specified", function () {
-    inputData = [-5, "names", "numbers"];
+    inputData = [-15, "names", "numbers"];
     expectedOutput = {
       option: "n",
-      count: 5,
+      count: 15,
       files: ["names", "numbers"]
     };
     assert.deepEqual(parseInput(inputData), expectedOutput);

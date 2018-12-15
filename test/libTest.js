@@ -2,14 +2,13 @@ const assert = require("assert");
 const {
   extractHeadLines,
   extractHeadCharacters,
-  retrieveData,
   head,
   tail,
   extractTailLines,
   extractTailCharacters,
   isPresent,
-  singleFileContents,
-  isValidSingleFile
+  isValidSingleFile,
+  generateRequiredContent
 } = require("../src/lib.js");
 
 const readFileSync = function (fileName) {
@@ -87,52 +86,6 @@ describe("extract Head Characters Function", function () {
     expectedOutput = "Four sided figure is called quadrilateral\n";
     expectedOutput += "Five sided figure is called pentagon";
     assert.deepEqual(extractHeadCharacters(string), expectedOutput);
-  });
-});
-
-describe("retrieveData", function () {
-  let inputData;
-  let expectedOutput;
-  const truthy = value => true;
-
-  it("should return fetched data according to specified file details", function () {
-    inputData = {
-      delimeter: "",
-      readFileSync,
-      funcRef: truthy,
-      content: [],
-      count: 2,
-      existsSync
-    };
-    expectedOutput = {
-      delimeter: "\n",
-      readFileSync,
-      funcRef: truthy,
-      content: ["==> numbers <==", true],
-      existsSync,
-      count: 2
-    };
-    assert.deepEqual(retrieveData(inputData, "numbers"), expectedOutput);
-  });
-
-  it("should return fetched data according to specified file details and should not change function reference", function () {
-    inputData = {
-      delimeter: "",
-      readFileSync,
-      funcRef: truthy,
-      content: [],
-      count: 2,
-      existsSync
-    };
-    expectedOutput = {
-      delimeter: "\n",
-      readFileSync,
-      funcRef: truthy,
-      content: ["==> names <==", true],
-      count: 2,
-      existsSync
-    };
-    assert.deepEqual(retrieveData(inputData, "names"), expectedOutput);
   });
 });
 
@@ -459,43 +412,70 @@ describe("isPresent", function () {
   });
 });
 
-describe('singleValidFile', function() {
-	it('should return true if it has a single file and which is present', function() {
-		assert.deepEqual(isValidSingleFile(['numbers'], existsSync), true);
-	});
-
-	it('should return false if it has more than one file', function() {
-		assert.deepEqual(isValidSingleFile(['names', 'numbers'], existsSync), false);
+describe('isValidSingleFile', function () {
+  it('should return true if it has a single file and which is present', function () {
+    assert.deepEqual(isValidSingleFile(['numbers'], existsSync), true);
   });
 
-  it('should return false if it has a single file and which is not present', function() {
-		assert.deepEqual(isValidSingleFile(['abcd.js'], existsSync), false);
-	});
+  it('should return false if it has more than one file', function () {
+    assert.deepEqual(isValidSingleFile(['names', 'numbers'], existsSync), false);
+  });
 
-	it('should return false if it has more than one file and some are not present', function() {
-		assert.deepEqual(isValidSingleFile(['numbers','abc.js'], existsSync), false);
-	});
+  it('should return false if it has a single file and which is not present', function () {
+    assert.deepEqual(isValidSingleFile(['abcd.js'], existsSync), false);
+  });
+
+  it('should return false if it has more than one file and some are not present', function () {
+    assert.deepEqual(isValidSingleFile(['numbers', 'abc.js'], existsSync), false);
+  });
 });
 
-describe("singleFileContents", function () {
-  let truthy = x => true
-  fileDetails = {
-    readFileSync,
-    funcRef: truthy,
-    count: 2,
-    existsSync,
-    funcName: "head"
-  }
-  it("should return the content if file is present", function () {
-    assert.deepEqual(singleFileContents(fileDetails, "numbers"), true);
+describe("generateRequiredContent function for single files", function () {
+
+  it('should return when operation head is specified with count and option(-n)', function () {
+    inputData = { count: 2, files: ["names"], funcName: "head", funcRef: extractHeadLines };
+    assert.deepEqual(generateRequiredContent(inputData, fs), 'mahesh\nswapnil');
   });
-  it("should return error for head function if file is not present", function () {
-    expectedOutput = "head: wrongFile.js: No such file or directory"
-    assert.deepEqual(singleFileContents(fileDetails, "wrongFile.js") , expectedOutput);
+
+  it('should return when operation tail is specified with count and option(-n)', function () {
+    inputData = { count: 2, files: ["numbers"], funcName: "tail", funcRef: extractTailLines };
+    assert.deepEqual(generateRequiredContent(inputData, fs), 'four\nfive');
   });
-  it("should return error for head function if file is not present", function () {
-    fileDetails.funcName = "tail";
-    expectedOutput = "tail: wrong.js: No such file or directory"
-    assert.deepEqual(singleFileContents(fileDetails, "wrong.js") , expectedOutput);
+
+  it('should return when operation head is specified with count and option(-c)', function () {
+    inputData = { count: 6, files: ["names"], funcName: "head", funcRef: extractHeadCharacters };
+    assert.deepEqual(generateRequiredContent(inputData, fs), 'mahesh');
+  });
+
+  it('should return when operation tail is specified with count and option(-c)', function () {
+    inputData = { count: 6, files: ["numbers"], funcName: "head", funcRef: extractTailCharacters };
+    assert.deepEqual(generateRequiredContent(inputData, fs), 'r\nfive');
+  });
+});
+
+describe("generateRequiredContent function for multiple files", function () {
+
+  it('should return when operation head is specified with count and option(-n)', function () {
+    inputData = { count: 2, files: ["names", "numbers"], funcName: "head", funcRef: extractHeadLines };
+    expectedOutput = "==> names <==\nmahesh\nswapnil\n\n==> numbers <==\none\ntwo";
+    assert.deepEqual(generateRequiredContent(inputData, fs), expectedOutput);
+  });
+
+  it('should return when operation tail is specified with count and option(-n)', function () {
+    inputData = { count: 2, files: ["names", "numbers"], funcName: "tail", funcRef: extractTailLines };
+    expectedOutput = "==> names <==\naftab\ndheeraj\n\n==> numbers <==\nfour\nfive";
+    assert.deepEqual(generateRequiredContent(inputData, fs), expectedOutput);
+  });
+
+  it('should return when operation head is specified with count and option(-c)', function () {
+    inputData = { count: 10, files: ["names", "numbers"], funcName: "head", funcRef: extractHeadCharacters };
+    expectedOutput = "==> names <==\nmahesh\nswa\n\n==> numbers <==\none\ntwo\nth";
+    assert.deepEqual(generateRequiredContent(inputData, fs), expectedOutput);
+  });
+
+  it('should return when operation tail is specified with count and option(-c)', function () {
+    inputData = { count: 10, files: ["names", "numbers"], funcName: "tail", funcRef: extractTailCharacters };
+    expectedOutput = "==> names <==\nab\ndheeraj\n\n==> numbers <==\n\nfour\nfive";
+    assert.deepEqual(generateRequiredContent(inputData, fs), expectedOutput);
   });
 });
