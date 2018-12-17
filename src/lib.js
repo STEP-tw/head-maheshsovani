@@ -1,7 +1,9 @@
-const parseInput = require("./parser.js").parseInput;
+const { parseInput } = require("./parser.js");
 const { manageHeadErrors, manageTailErrors } = require("./errorHandler.js");
+
 const extractHeadLines = function(file, numberOfLines) {
-  return file.slice(0, numberOfLines).join("\n");
+  let fileContent = file.split("\n");
+  return fileContent.slice(0, numberOfLines).join("\n");
 };
 
 const generateHeader = function(fileName) {
@@ -9,15 +11,16 @@ const generateHeader = function(fileName) {
 };
 
 const extractHeadCharacters = function(file, numberOfCharacters) {
-  return file.join("\n").slice(0, numberOfCharacters);
+  return file.slice(0, numberOfCharacters);
 };
 
 const extractTailLines = function(file, numberOfLines) {
-  return file.slice(-numberOfLines).join("\n");
+  let fileContent = file.split("\n")
+  return fileContent.slice(-numberOfLines).join("\n");
 };
 
 const extractTailCharacters = function(file, numberOfCharacters) {
-  return file.join("\n").slice(-numberOfCharacters);
+  return file.slice(-numberOfCharacters);
 };
 
 const isPresent = function(fileName, existsSync) {
@@ -35,14 +38,14 @@ const generateRequiredContent = function(details, fs) {
   let content = [];
 
   if (isValidSingleFile(files, existsSync)) {
-    return funcRef(readFileSync(files[0], "utf8").split("\n"), count);
+    return funcRef(readFileSync(files[0], "utf8"), count);
   }
 
   for (let file of files) {
     let fileContent = funcName + ": " + file + ": No such file or directory";
     if (isPresent(file, existsSync)) {
       fileContent = delimeter + generateHeader(file);
-      fileContent += funcRef(readFileSync(file, "utf8").split("\n"), count);
+      fileContent += funcRef(readFileSync(file, "utf8"), count);
       delimeter = "\n";
     }
     content.push(fileContent);
