@@ -33,19 +33,19 @@ const isValidSingleFile = function(files, existsSync) {
 
 const generateRequiredContent = function(details, fs) {
   const { existsSync, readFileSync } = fs;
-  const { files, funcName, count, funcRef } = details;
+  const { files, funcName, count, extractorFunction } = details;
   let delimeter = "";
   let content = [];
 
   if (isValidSingleFile(files, existsSync)) {
-    return funcRef(readFileSync(files[0], "utf8"), count);
+    return extractorFunction(readFileSync(files[0], "utf8"), count);
   }
 
   for (let file of files) {
     let fileContent = funcName + ": " + file + ": No such file or directory";
     if (isPresent(file, existsSync)) {
       fileContent = delimeter + generateHeader(file);
-      fileContent += funcRef(readFileSync(file, "utf8"), count);
+      fileContent += extractorFunction(readFileSync(file, "utf8"), count);
       delimeter = "\n";
     }
     content.push(fileContent);
@@ -56,8 +56,8 @@ const generateRequiredContent = function(details, fs) {
 const head = function(inputDetails, fs) {
   let { option, count, files } = parseInput(inputDetails);
   let getOutput = { n: extractHeadLines, c: extractHeadCharacters };
-  let funcRef = getOutput[option];
-  let fileDetails = { count, files, funcRef, funcName: "head" };
+  let extractorFunction = getOutput[option];
+  let fileDetails = { count, files, extractorFunction, funcName: "head" };
   return (
     manageHeadErrors(inputDetails) || generateRequiredContent(fileDetails, fs)
   );
@@ -66,11 +66,11 @@ const head = function(inputDetails, fs) {
 const tail = function(inputDetails, fs) {
   let { option, count, files } = parseInput(inputDetails);
   let getOutput = { n: extractTailLines, c: extractTailCharacters };
-  let funcRef = getOutput[option];
+  let extractorFunction = getOutput[option];
   let fileDetails = {
     count: parseInt(count),
     files,
-    funcRef,
+    extractorFunction,
     funcName: "tail"
   };
 

@@ -448,7 +448,7 @@ describe("generateRequiredContent function for single files", function() {
       count: 2,
       files: ["names"],
       funcName: "head",
-      funcRef: extractHeadLines
+      extractorFunction: extractHeadLines
     };
     assert.deepEqual(generateRequiredContent(inputData, fs), "mahesh\nswapnil");
   });
@@ -458,7 +458,7 @@ describe("generateRequiredContent function for single files", function() {
       count: 2,
       files: ["numbers"],
       funcName: "tail",
-      funcRef: extractTailLines
+      extractorFunction: extractTailLines
     };
     assert.deepEqual(generateRequiredContent(inputData, fs), "four\nfive");
   });
@@ -468,7 +468,7 @@ describe("generateRequiredContent function for single files", function() {
       count: 6,
       files: ["names"],
       funcName: "head",
-      funcRef: extractHeadCharacters
+      extractorFunction: extractHeadCharacters
     };
     assert.deepEqual(generateRequiredContent(inputData, fs), "mahesh");
   });
@@ -478,7 +478,7 @@ describe("generateRequiredContent function for single files", function() {
       count: 6,
       files: ["numbers"],
       funcName: "head",
-      funcRef: extractTailCharacters
+      extractorFunction: extractTailCharacters
     };
     assert.deepEqual(generateRequiredContent(inputData, fs), "r\nfive");
   });
@@ -490,7 +490,7 @@ describe("generateRequiredContent function for multiple files", function() {
       count: 2,
       files: ["names", "numbers"],
       funcName: "head",
-      funcRef: extractHeadLines
+      extractorFunction: extractHeadLines
     };
     expectedOutput =
       "==> names <==\nmahesh\nswapnil\n\n==> numbers <==\none\ntwo";
@@ -502,7 +502,7 @@ describe("generateRequiredContent function for multiple files", function() {
       count: 2,
       files: ["names", "numbers"],
       funcName: "tail",
-      funcRef: extractTailLines
+      extractorFunction: extractTailLines
     };
     expectedOutput =
       "==> names <==\naftab\ndheeraj\n\n==> numbers <==\nfour\nfive";
@@ -514,7 +514,7 @@ describe("generateRequiredContent function for multiple files", function() {
       count: 10,
       files: ["names", "numbers"],
       funcName: "head",
-      funcRef: extractHeadCharacters
+      extractorFunction: extractHeadCharacters
     };
     expectedOutput =
       "==> names <==\nmahesh\nswa\n\n==> numbers <==\none\ntwo\nth";
@@ -526,7 +526,7 @@ describe("generateRequiredContent function for multiple files", function() {
       count: 10,
       files: ["names", "numbers"],
       funcName: "tail",
-      funcRef: extractTailCharacters
+      extractorFunction: extractTailCharacters
     };
     expectedOutput =
       "==> names <==\nab\ndheeraj\n\n==> numbers <==\n\nfour\nfive";
