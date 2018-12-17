@@ -1,26 +1,16 @@
 const { parseInput } = require("./parser.js");
 const { manageHeadErrors, manageTailErrors } = require("./errorHandler.js");
 
-const extractHeadLines = function(file, numberOfLines) {
-  let fileContent = file.split("\n");
-  return fileContent.slice(0, numberOfLines).join("\n");
+const seperator = { n: '\n', c: '' };
+
+const extractRequiredContent = function(option, count, operation,file) {
+	let ranges = { head: [0, count], tail: [-count] };
+	let range = ranges[operation];
+	return file.split(seperator[option]).slice(range[0], range[1]).join(seperator[option]);
 };
 
 const generateHeader = function(fileName) {
   return "==> " + fileName + " <==\n";
-};
-
-const extractHeadCharacters = function(file, numberOfCharacters) {
-  return file.slice(0, numberOfCharacters);
-};
-
-const extractTailLines = function(file, numberOfLines) {
-  let fileContent = file.split("\n");
-  return fileContent.slice(-numberOfLines).join("\n");
-};
-
-const extractTailCharacters = function(file, numberOfCharacters) {
-  return file.slice(-numberOfCharacters);
 };
 
 const isPresent = function(fileName, existsSync) {
@@ -33,19 +23,20 @@ const isValidSingleFile = function(files, existsSync) {
 
 const generateRequiredContent = function(details, fs) {
   const { existsSync, readFileSync } = fs;
-  const { files, funcName, count, extractorFunction } = details;
+  const { files, funcName, count,option } = details;
+  let getContent = extractRequiredContent.bind(null,option ,count ,funcName );
   let delimeter = "";
   let content = [];
 
   if (isValidSingleFile(files, existsSync)) {
-    return extractorFunction(readFileSync(files[0], "utf8"), count);
+    return getContent(readFileSync(files[0], "utf8"));
   }
 
   for (let file of files) {
     let fileContent = funcName + ": " + file + ": No such file or directory";
     if (isPresent(file, existsSync)) {
       fileContent = delimeter + generateHeader(file);
-      fileContent += extractorFunction(readFileSync(file, "utf8"), count);
+      fileContent += getContent(readFileSync(file, "utf8"));
       delimeter = "\n";
     }
     content.push(fileContent);
@@ -55,36 +46,22 @@ const generateRequiredContent = function(details, fs) {
 
 const head = function(inputDetails, fs) {
   let { option, count, files } = parseInput(inputDetails);
-  let getOutput = { n: extractHeadLines, c: extractHeadCharacters };
-  let extractorFunction = getOutput[option];
-  let fileDetails = { count, files, extractorFunction, funcName: "head" };
-  return (
-    manageHeadErrors(inputDetails) || generateRequiredContent(fileDetails, fs)
-  );
+  let fileDetails = { count, files, funcName: "head" ,option};
+  return manageHeadErrors(inputDetails) || generateRequiredContent(fileDetails, fs);
 };
 
 const tail = function(inputDetails, fs) {
   let { option, count, files } = parseInput(inputDetails);
-  let getOutput = { n: extractTailLines, c: extractTailCharacters };
-  let extractorFunction = getOutput[option];
-  let fileDetails = {
-    count: parseInt(count),
-    files,
-    extractorFunction,
-    funcName: "tail"
-  };
+  let fileDetails = { count ,files,funcName: "tail",option };
   return manageTailErrors(inputDetails) || generateRequiredContent(fileDetails, fs)
 };
 
 module.exports = {
-  extractHeadLines,
-  extractHeadCharacters,
   head,
   tail,
-  extractTailLines,
-  extractTailCharacters,
   isPresent,
   generateRequiredContent,
   isValidSingleFile,
-  generateHeader
+  generateHeader,
+  extractRequiredContent
 };

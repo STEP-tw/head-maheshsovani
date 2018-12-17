@@ -1,15 +1,12 @@
 const assert = require("assert");
 const {
-  extractHeadLines,
-  extractHeadCharacters,
   head,
   tail,
-  extractTailLines,
-  extractTailCharacters,
   isPresent,
   isValidSingleFile,
   generateRequiredContent,
-  generateHeader
+  generateHeader,
+  extractRequiredContent
 } = require("../src/lib.js");
 
 const readFileSync = function(fileName) {
@@ -25,73 +22,42 @@ const existsSync = function(fileName) {
 };
 
 const fs = { readFileSync: readFileSync, existsSync: existsSync };
+describe('extractRequiredContent', function() {
+  let numbers = "One\nTwo\nThree\nFour\nFive\nsix\nSeven\nEight\nNine\nTen"
 
-describe("extract head Lines Function", function() {
-  let string = "";
-  let expectedOutput = "";
+	it('should return head content when -n is given as option', function() {
+		expectedOutput = 'One\nTwo\nThree';
+		assert.deepEqual(
+			extractRequiredContent('n', 3, 'head',numbers),
+			expectedOutput
+		);
+	});
 
-  beforeEach("Make string constant", function() {
-    string = "Four sided figure is called quadrilateral\n";
-    string += "Five sided figure is called pentagon\n";
-    string += "Six sided figure is called hexagon\n";
-    string += "Seven sided figure is called heptagon\n";
-    string += "Eight sided figure is called octagon";
-  });
+	it('should return tail content when -c is given as option', function() {
+		expectedOutput = 'Ten';
+		assert.deepEqual(
+			extractRequiredContent('c', 3, 'tail',numbers),
+			expectedOutput
+		);
+	});
 
-  it("should return an empty string when empty string is given ", function() {
-    assert.deepEqual(extractHeadLines(""), "");
-  });
+	it('should return tail content when -n is given as option', function() {
+		expectedOutput = 'Eight\nNine\nTen';
+		assert.deepEqual(
+			extractRequiredContent('n', 3, 'tail',numbers),
+			expectedOutput
+		);
+	});
 
-  it("should return a single line when multiple lines string is given and length is one", function() {
-    let expectedOutput = "Four sided figure is called quadrilateral";
-    assert.deepEqual(extractHeadLines(string, 1), expectedOutput);
-  });
-
-  it("should return a given number of lines when multiple lines string is given ", function() {
-    let expectedOutput = "Four sided figure is called quadrilateral\n";
-    expectedOutput += "Five sided figure is called pentagon\n";
-    expectedOutput += "Six sided figure is called hexagon";
-    assert.deepEqual(extractHeadLines(string, 3), expectedOutput);
-  });
-
-  it("should return whole file when multiple lines string is given and number of lines is not specified", function() {
-    let expectedOutput = "Four sided figure is called quadrilateral\n";
-    expectedOutput += "Five sided figure is called pentagon\n";
-    expectedOutput += "Six sided figure is called hexagon\n";
-    expectedOutput += "Seven sided figure is called heptagon\n";
-    expectedOutput += "Eight sided figure is called octagon";
-    assert.deepEqual(extractHeadLines(string), expectedOutput);
-  });
+	it('should return head content when -c is given as option', function() {
+		expectedOutput = 'One';
+		assert.deepEqual(
+			extractRequiredContent('c', 3, 'head',numbers),
+			expectedOutput
+		);
+	});
 });
 
-describe("extract Head Characters Function", function() {
-  let string = "";
-  let expectedOutput = "";
-  string += "Four sided figure is called quadrilateral\n";
-  string += "Five sided figure is called pentagon";
-
-  it("should return an empty string when empty string is given ", function() {
-    assert.deepEqual(extractHeadCharacters("", 2), "");
-  });
-
-  it("should return a single character when length given is one", function() {
-    assert.deepEqual(extractHeadCharacters("Four sided figure", 1), "F");
-  });
-
-  it("should return a given number of characters when long text is given ", function() {
-    assert.deepEqual(extractHeadCharacters("Four sided figure", 3), "Fou");
-    assert.deepEqual(
-      extractHeadCharacters("Four sided figure", 7),
-      "Four si"
-    );
-  });
-
-  it("should return whole file when number of characters is not specified", function() {
-    expectedOutput = "Four sided figure is called quadrilateral\n";
-    expectedOutput += "Five sided figure is called pentagon";
-    assert.deepEqual(extractHeadCharacters(string), expectedOutput);
-  });
-});
 
 describe("Head function with single file", function() {
   it("should return the first ten lines of file when count is not specified", function() {
@@ -224,71 +190,6 @@ describe("Head function errors handling", function() {
   });
 });
 
-describe("extract tail Lines Function", function() {
-  let string = "";
-
-  beforeEach("Make string constant", function() {
-    string = "Four sided figure is called quadrilateral\n";
-    string += "Five sided figure is called pentagon\n";
-    string += "Six sided figure is called hexagon\n";
-    string += "Seven sided figure is called heptagon\n";
-    string += "Eight sided figure is called octagon";
-  });
-
-  it("should return an empty string when empty string is given ", function() {
-    assert.deepEqual(extractTailLines(""), "");
-  });
-
-  it("should return a single line when multiple lines string is given and length is one", function() {
-    let expectedOutput = "Eight sided figure is called octagon";
-    assert.deepEqual(extractTailLines(string, 1), expectedOutput);
-  });
-
-  it("should return a given number of lines when multiple lines string is given ", function() {
-    let expectedOutput = "Six sided figure is called hexagon\n";
-    expectedOutput += "Seven sided figure is called heptagon\n";
-    expectedOutput += "Eight sided figure is called octagon";
-    assert.deepEqual(extractTailLines(string, 3), expectedOutput);
-  });
-
-  it("should return whole file when multiple lines string is given and number of lines is not specified", function() {
-    let expectedOutput = "Four sided figure is called quadrilateral\n";
-    expectedOutput += "Five sided figure is called pentagon\n";
-    expectedOutput += "Six sided figure is called hexagon\n";
-    expectedOutput += "Seven sided figure is called heptagon\n";
-    expectedOutput += "Eight sided figure is called octagon";
-    assert.deepEqual(extractTailLines(string), expectedOutput);
-  });
-});
-
-describe("extract tail Characters Function", function() {
-  let string = "";
-  let expectedOutput = "";
-  string += "Four sided figure is called quadrilateral\n";
-  string += "Five sided figure is called pentagon";
-
-  it("should return an empty string when empty array is given ", function() {
-    assert.deepEqual(extractTailCharacters("", 2), "");
-  });
-
-  it("should return a single character when length given is one", function() {
-    assert.deepEqual(extractTailCharacters("Four sided figure", 1), "e");
-  });
-
-  it("should return a given number of characters when long text is given ", function() {
-    assert.deepEqual(extractTailCharacters("Four sided figure", 3), "ure");
-    assert.deepEqual(
-      extractTailCharacters("Four sided figure", 7),
-      " figure"
-    );
-  });
-
-  it("should return whole file when number of characters is not specified", function() {
-    expectedOutput = "Four sided figure is called quadrilateral\n";
-    expectedOutput += "Five sided figure is called pentagon";
-    assert.deepEqual(extractTailCharacters(string), expectedOutput);
-  });
-});
 
 describe("Tail function with single file", function() {
   it("should return the first ten lines of file when count is not specified", function() {
@@ -448,7 +349,7 @@ describe("generateRequiredContent function for single files", function() {
       count: 2,
       files: ["names"],
       funcName: "head",
-      extractorFunction: extractHeadLines
+      option:"n"
     };
     assert.deepEqual(generateRequiredContent(inputData, fs), "mahesh\nswapnil");
   });
@@ -458,7 +359,7 @@ describe("generateRequiredContent function for single files", function() {
       count: 2,
       files: ["numbers"],
       funcName: "tail",
-      extractorFunction: extractTailLines
+      option:"n"
     };
     assert.deepEqual(generateRequiredContent(inputData, fs), "four\nfive");
   });
@@ -468,7 +369,7 @@ describe("generateRequiredContent function for single files", function() {
       count: 6,
       files: ["names"],
       funcName: "head",
-      extractorFunction: extractHeadCharacters
+      option : "c"
     };
     assert.deepEqual(generateRequiredContent(inputData, fs), "mahesh");
   });
@@ -477,8 +378,8 @@ describe("generateRequiredContent function for single files", function() {
     inputData = {
       count: 6,
       files: ["numbers"],
-      funcName: "head",
-      extractorFunction: extractTailCharacters
+      funcName: "tail",
+      option : "c"
     };
     assert.deepEqual(generateRequiredContent(inputData, fs), "r\nfive");
   });
@@ -490,7 +391,7 @@ describe("generateRequiredContent function for multiple files", function() {
       count: 2,
       files: ["names", "numbers"],
       funcName: "head",
-      extractorFunction: extractHeadLines
+      option : "n"
     };
     expectedOutput =
       "==> names <==\nmahesh\nswapnil\n\n==> numbers <==\none\ntwo";
@@ -502,7 +403,7 @@ describe("generateRequiredContent function for multiple files", function() {
       count: 2,
       files: ["names", "numbers"],
       funcName: "tail",
-      extractorFunction: extractTailLines
+      option : "n"
     };
     expectedOutput =
       "==> names <==\naftab\ndheeraj\n\n==> numbers <==\nfour\nfive";
@@ -514,7 +415,7 @@ describe("generateRequiredContent function for multiple files", function() {
       count: 10,
       files: ["names", "numbers"],
       funcName: "head",
-      extractorFunction: extractHeadCharacters
+      option : "c"
     };
     expectedOutput =
       "==> names <==\nmahesh\nswa\n\n==> numbers <==\none\ntwo\nth";
@@ -526,7 +427,7 @@ describe("generateRequiredContent function for multiple files", function() {
       count: 10,
       files: ["names", "numbers"],
       funcName: "tail",
-      extractorFunction: extractTailCharacters
+      option : "c"
     };
     expectedOutput =
       "==> names <==\nab\ndheeraj\n\n==> numbers <==\n\nfour\nfive";
