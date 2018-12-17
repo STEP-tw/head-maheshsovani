@@ -54,7 +54,7 @@ const manageTailErrors = function(inputDetails){
   let { option, count, files } = parseInput(inputDetails);
 
   if (hasZero(inputDetails)) {
-    return '';
+    return ' ';
   }
 
   if (checkValidOption("tail", inputDetails)) {

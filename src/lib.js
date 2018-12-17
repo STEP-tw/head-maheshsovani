@@ -15,7 +15,7 @@ const extractHeadCharacters = function(file, numberOfCharacters) {
 };
 
 const extractTailLines = function(file, numberOfLines) {
-  let fileContent = file.split("\n")
+  let fileContent = file.split("\n");
   return fileContent.slice(-numberOfLines).join("\n");
 };
 
@@ -28,7 +28,7 @@ const isPresent = function(fileName, existsSync) {
 };
 
 const isValidSingleFile = function(files, existsSync) {
-  return files.length == 1 && isPresent(files[0],existsSync);
+  return files.length == 1 && isPresent(files[0], existsSync);
 };
 
 const generateRequiredContent = function(details, fs) {
@@ -73,12 +73,7 @@ const tail = function(inputDetails, fs) {
     extractorFunction,
     funcName: "tail"
   };
-
-  if (manageTailErrors(inputDetails) != undefined) {
-    return manageTailErrors(inputDetails);
-  }
-
-  return generateRequiredContent(fileDetails, fs);
+  return manageTailErrors(inputDetails) || generateRequiredContent(fileDetails, fs)
 };
 
 module.exports = {

@@ -38,23 +38,23 @@ describe("extract head Lines Function", function() {
     string += "Eight sided figure is called octagon";
   });
 
-  it("should return an empty string when empty array is given ", function() {
+  it("should return an empty string when empty string is given ", function() {
     assert.deepEqual(extractHeadLines(""), "");
   });
 
-  it("should return a single line when multiple element array is given and length is one", function() {
+  it("should return a single line when multiple lines string is given and length is one", function() {
     let expectedOutput = "Four sided figure is called quadrilateral";
     assert.deepEqual(extractHeadLines(string, 1), expectedOutput);
   });
 
-  it("should return a given number of lines when multiple element array is given ", function() {
+  it("should return a given number of lines when multiple lines string is given ", function() {
     let expectedOutput = "Four sided figure is called quadrilateral\n";
     expectedOutput += "Five sided figure is called pentagon\n";
     expectedOutput += "Six sided figure is called hexagon";
     assert.deepEqual(extractHeadLines(string, 3), expectedOutput);
   });
 
-  it("should return whole file when multiple element array is given and number of lines is not specified", function() {
+  it("should return whole file when multiple lines string is given and number of lines is not specified", function() {
     let expectedOutput = "Four sided figure is called quadrilateral\n";
     expectedOutput += "Five sided figure is called pentagon\n";
     expectedOutput += "Six sided figure is called hexagon\n";
@@ -70,7 +70,7 @@ describe("extract Head Characters Function", function() {
   string += "Four sided figure is called quadrilateral\n";
   string += "Five sided figure is called pentagon";
 
-  it("should return an empty string when empty array is given ", function() {
+  it("should return an empty string when empty string is given ", function() {
     assert.deepEqual(extractHeadCharacters("", 2), "");
   });
 
@@ -235,23 +235,23 @@ describe("extract tail Lines Function", function() {
     string += "Eight sided figure is called octagon";
   });
 
-  it("should return an empty string when empty array is given ", function() {
+  it("should return an empty string when empty string is given ", function() {
     assert.deepEqual(extractTailLines(""), "");
   });
 
-  it("should return a single line when multiple element array is given and length is one", function() {
+  it("should return a single line when multiple lines string is given and length is one", function() {
     let expectedOutput = "Eight sided figure is called octagon";
     assert.deepEqual(extractTailLines(string, 1), expectedOutput);
   });
 
-  it("should return a given number of lines when multiple element array is given ", function() {
+  it("should return a given number of lines when multiple lines string is given ", function() {
     let expectedOutput = "Six sided figure is called hexagon\n";
     expectedOutput += "Seven sided figure is called heptagon\n";
     expectedOutput += "Eight sided figure is called octagon";
     assert.deepEqual(extractTailLines(string, 3), expectedOutput);
   });
 
-  it("should return whole file when multiple element array is given and number of lines is not specified", function() {
+  it("should return whole file when multiple lines string is given and number of lines is not specified", function() {
     let expectedOutput = "Four sided figure is called quadrilateral\n";
     expectedOutput += "Five sided figure is called pentagon\n";
     expectedOutput += "Six sided figure is called hexagon\n";
@@ -355,12 +355,12 @@ describe("Tail function with multiple file", function() {
 });
 
 describe("Tail function errors handling", function() {
-  it("should return the error message when number of lines is given zero with n without spaces", function() {
-    assert.deepEqual(tail(["-n0", "names", "numbers"], fs), "");
+  it("should return the string with one space when number of lines is given zero with n without spaces", function() {
+    assert.deepEqual(tail(["-n0", "names", "numbers"], fs), " ");
   });
 
-  it("should return the error message when  is count is given zero only without -c or -n", function() {
-    assert.deepEqual(tail(["-0", "names", "numbers"], fs), "");
+  it("should return the string with one space when  is count is given zero only without -c or -n", function() {
+    assert.deepEqual(tail(["-0", "names", "numbers"], fs), " ");
   });
 
   it("should return the error message when  file is not present in the directory", function() {
