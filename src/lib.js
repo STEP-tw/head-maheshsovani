@@ -28,7 +28,7 @@ const isPresent = function(fileName, existsSync) {
 };
 
 const isValidSingleFile = function(files, existsSync) {
-  return files.length == 1 && existsSync(files[0]);
+  return files.length == 1 && isPresent(files[0],existsSync);
 };
 
 const generateRequiredContent = function(details, fs) {
