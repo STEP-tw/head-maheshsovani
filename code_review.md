@@ -1,4 +1,6 @@
-errorHandler.js has no independent tests
+### CODE REVIEW
+
+```errorHandler.js has no independent tests
 lib.js
 1- destructuring can be better
 2- file is an array // poor name
@@ -29,4 +31,4 @@ no let for expectedOutput and inputData
 70- test inputs for extracting lines and characters () can be small
 78- if statement can be more precise
 94- poor it description
-94- misleading tests
+94- misleading tests```
