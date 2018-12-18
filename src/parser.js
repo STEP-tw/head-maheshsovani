@@ -1,5 +1,5 @@
 let hasOption = function(details) {
-  return hasDash(details) && details[1].match(/[A-z]/);
+  return hasDash(details) && !!details[1].match(/[A-z]/);
 };
 
 const isOptionWithCount = function(details) {
@@ -39,4 +39,4 @@ const parseInput = function(details) {
   return createObject("n",10,details) 
 }
 
-module.exports = { parseInput, isOptionWithCount, hasOption ,isOnlyOption , hasDash };
+module.exports = { parseInput, isOptionWithCount, hasOption ,isOnlyOption , hasDash,createObject , isOnlyCount };

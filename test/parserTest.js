@@ -1,8 +1,15 @@
 const assert = require("assert");
+
 const {
   parseInput,
-  isOptionWithCount
+  isOptionWithCount,
+  hasOption,
+  isOnlyOption,
+  hasDash,
+  createObject,
+  isOnlyCount
 } = require("../src/parser.js");
+
 describe("parseInput", function() {
   let inputData;
   let expectedOutput;
@@ -68,5 +75,60 @@ describe("isOptionWithCount", function() {
   it("should return false when only option is given without count", function() {
     assert.deepEqual(isOptionWithCount("-3"), false);
     assert.deepEqual(isOptionWithCount("-1"), false);
+  });
+});
+describe("hasOption", function() {
+  it("should return false when option given is empty string", function() {
+    assert.equal(hasOption(""), false);
+  });
+  it("should return true when option given strarts with - and an alphabet in front of it", function() {
+    assert.equal(hasOption("-n"), true);
+  });
+  it("should return false when option given strarts with - but not have alphabet in front of it", function() {
+    assert.equal(hasOption("-3"), false);
+  });
+});
+describe("isOnlyOption", function() {
+  it("should return false when option given is empty string", function() {
+    assert.equal(isOnlyOption(""), false);
+  });
+  it("should return true when option given strarts with - and only one alphabet in front of it", function() {
+    assert.equal(isOnlyOption("-n"), true);
+  });
+  it("should return false when option given strarts with - but not have alphabet in front of it", function() {
+    assert.equal(isOnlyOption("-3"), false);
+  });
+  it("should return false when option given strarts with - dash but its lenght is more than two", function() {
+    assert.equal(isOnlyOption("-asdf"), false);
+  });
+});
+
+describe("hasDash", function() {
+  it("should return true when option given startsWith the dash", function() {
+    assert.equal(hasDash("maasf"), false);
+  });
+  it("should return false when option given doesn't start with dash", function() {
+    assert.equal(hasDash("-n"), true);
+  });
+});
+describe("createObject", function() {
+  it("should return undefined values of object if values are not specified", function() {
+    expectedOutput = { option: undefined,count: undefined, files: undefined };
+    assert.deepEqual(createObject(), expectedOutput);
+  });
+
+  it("should return object when given parameters", function() {
+    expectedOutput = { option: "n", count: 3, files: ["file1", "file2"] };
+    assert.deepEqual(createObject("n", 3, ["file1", "file2"]), expectedOutput);
+  });
+});
+
+describe("isOnlyCount", function() {
+  it("should return true when only number is given with hash at start and only number in front of it", function() {
+    assert.deepEqual(isOnlyCount("-123"), true);
+  });
+
+  it("should return false when option contain dash and alphabet in front of it", function() {
+    assert.deepEqual(isOnlyCount("-n234"), false);
   });
 });
