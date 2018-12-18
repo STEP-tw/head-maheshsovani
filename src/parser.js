@@ -18,9 +18,13 @@ const createObject = function(option,count,files){
   return {option , count , files}
 }
 
+const isOnlyCount = function (count){
+  return hasDash(count) && !isNaN(count)
+}
+
 const parseInput = function(details) {
 
-  if (details[0].startsWith("-") && !isNaN(details[0])) {
+  if (isOnlyCount(details[0])) {
     return createObject("n" , Math.abs(details[0]),details.slice(1));
   }
 
