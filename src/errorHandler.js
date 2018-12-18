@@ -4,8 +4,8 @@ const isInvalidOption = function (option) {
   return (!["n","c"].includes(option));
 };
 
-const hasZero = function (option,count) {
-  return (option == 0  || count == 0)
+const hasZero = function (count) {
+  return count == 0
 };
 
 const invalidOptionError = function (funcName, option) {
@@ -18,11 +18,17 @@ const invalidOptionError = function (funcName, option) {
   return errors[funcName];
 };
 
-const validateOption = function (functionName, option) {
-  if (isInvalidOption(option)) {
-    return invalidOptionError(functionName, option)
+const illegalCountError = function (funcName, count,option) {
+  let errors = {
+    tail : {n: "tail: illegal offset -- "+ count,
+            c: "tail: illegal offset -- "+ count
+    },
+    head: {n: "head: illegal line count -- " + count,
+           c : "head: illegal byte count -- " + count
+    }
   }
-}
+  return errors[funcName][option];
+};
 
 const manageHeadErrors = function(inputDetails){
   let { option, count, files} = parseInput(inputDetails);
@@ -30,32 +36,30 @@ const manageHeadErrors = function(inputDetails){
 
   if (files.includes("0")  || count == 0) {
     return "head: illegal line count -- 0";
-n }
+ }
 
-  if (validateOption("head", option)) {
-    return validateOption("head", option);
+  if (isInvalidOption(option)) {
+    return invalidOptionError("head", option);
   }
 
   if (isNaN(count) || count < 1) {
-    return option == "n"
-      ? "head: illegal line count -- " + count
-      : "head: illegal byte count -- " + count;
+    return illegalCountError("head",count,option);
   }
 }
 
 const manageTailErrors = function(inputDetails){
-  let { option, count, files } = parseInput(inputDetails);
+  let { option, count } = parseInput(inputDetails);
 
-  if (hasZero(option, count)) {
+  if (hasZero(count)) {
     return ' ';
   }
 
-  if (validateOption("tail", option)) {
-    return validateOption("tail",option);
+  if (isInvalidOption(option)) {
+    return invalidOptionError("tail",option);
   }
 
   if (isNaN(count)) {
-    return "tail: illegal offset -- " + count;
+    return illegalCountError("tail",count,option);
   } 
 }
 
