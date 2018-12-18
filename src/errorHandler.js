@@ -18,7 +18,7 @@ const invalidOptionError = function (funcName, option) {
   return errors[funcName];
 };
 
-const checkValidOption = function (functionName, option) {
+const validateOption = function (functionName, option) {
   if (isInvalidOption(option)) {
     return invalidOptionError(functionName, option)
   }
@@ -30,10 +30,10 @@ const manageHeadErrors = function(inputDetails){
 
   if (files.includes("0")  || count == 0) {
     return "head: illegal line count -- 0";
-  }
+n }
 
-  if (checkValidOption("head", option)) {
-    return checkValidOption("head", option);
+  if (validateOption("head", option)) {
+    return validateOption("head", option);
   }
 
   if (isNaN(count) || count < 1) {
@@ -50,8 +50,8 @@ const manageTailErrors = function(inputDetails){
     return ' ';
   }
 
-  if (checkValidOption("tail", option)) {
-    return checkValidOption("tail",option);
+  if (validateOption("tail", option)) {
+    return validateOption("tail",option);
   }
 
   if (isNaN(count)) {
