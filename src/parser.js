@@ -6,37 +6,44 @@ const isOptionWithCount = function(details) {
   return hasDash(details) && details.length > 2;
 };
 
-const isOnlyOption = function(details){
+const isOnlyOption = function(details) {
   return hasOption(details) && details.length == 2;
-}
+};
 
 const hasDash = function(option) {
   return option.startsWith("-");
-}
+};
 
-const createObject = function(option,count,files){
-  return {option , count , files}
-}
+const createObject = function(option, count, files) {
+  return { option, count, files };
+};
 
-const isOnlyCount = function (count){
-  return hasDash(count) && !isNaN(count)
-}
+const isOnlyCount = function(count) {
+  return hasDash(count) && !isNaN(count);
+};
 
 const parseInput = function(details) {
-
   if (isOnlyCount(details[0])) {
-    return createObject("n" , Math.abs(details[0]),details.slice(1));
+    return createObject("n", Math.abs(details[0]), details.slice(1));
   }
 
   if (isOnlyOption(details[0])) {
-    return createObject(details[0][1] , details[1] ,details.slice(2));
+    return createObject(details[0][1], details[1], details.slice(2));
   }
 
   if (isOptionWithCount(details[0])) {
-    return createObject(details[0][1] , details[0].slice(2) ,details.slice(1));
+    return createObject(details[0][1], details[0].slice(2), details.slice(1));
   }
 
-  return createObject("n",10,details) 
-}
+  return createObject("n", 10, details);
+};
 
-module.exports = { parseInput, isOptionWithCount, hasOption ,isOnlyOption , hasDash,createObject , isOnlyCount };
+module.exports = {
+  parseInput,
+  isOptionWithCount,
+  hasOption,
+  isOnlyOption,
+  hasDash,
+  createObject,
+  isOnlyCount
+};

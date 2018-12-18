@@ -22,42 +22,42 @@ const existsSync = function(fileName) {
 };
 
 const fs = { readFileSync: readFileSync, existsSync: existsSync };
-describe('extractRequiredContent', function() {
-  let numbers = "One\nTwo\nThree\nFour\nFive\nsix\nSeven\nEight\nNine\nTen"
+describe("extractRequiredContent", function() {
+  let expectedOutput;
+  let numbers = "One\nTwo\nThree\nFour\nFive\nsix\nSeven\nEight\nNine\nTen";
 
-	it('should return head content when -n is given as option', function() {
-		expectedOutput = 'One\nTwo\nThree';
-		assert.deepEqual(
-			extractRequiredContent('n', 3, 'head',numbers),
-			expectedOutput
-		);
-	});
+  it("should return head content when -n is given as option", function() {
+    expectedOutput = "One\nTwo\nThree";
+    assert.deepEqual(
+      extractRequiredContent("n", 3, "head", numbers),
+      expectedOutput
+    );
+  });
 
-	it('should return tail content when -c is given as option', function() {
-		expectedOutput = 'Ten';
-		assert.deepEqual(
-			extractRequiredContent('c', 3, 'tail',numbers),
-			expectedOutput
-		);
-	});
+  it("should return tail content when -c is given as option", function() {
+    expectedOutput = "Ten";
+    assert.deepEqual(
+      extractRequiredContent("c", 3, "tail", numbers),
+      expectedOutput
+    );
+  });
 
-	it('should return tail content when -n is given as option', function() {
-		expectedOutput = 'Eight\nNine\nTen';
-		assert.deepEqual(
-			extractRequiredContent('n', 3, 'tail',numbers),
-			expectedOutput
-		);
-	});
+  it("should return tail content when -n is given as option", function() {
+    expectedOutput = "Eight\nNine\nTen";
+    assert.deepEqual(
+      extractRequiredContent("n", 3, "tail", numbers),
+      expectedOutput
+    );
+  });
 
-	it('should return head content when -c is given as option', function() {
-		expectedOutput = 'One';
-		assert.deepEqual(
-			extractRequiredContent('c', 3, 'head',numbers),
-			expectedOutput
-		);
-	});
+  it("should return head content when -c is given as option", function() {
+    expectedOutput = "One";
+    assert.deepEqual(
+      extractRequiredContent("c", 3, "head", numbers),
+      expectedOutput
+    );
+  });
 });
-
 
 describe("Head function with single file", function() {
   it("should return the first ten lines of file when count is not specified", function() {
@@ -89,6 +89,8 @@ describe("Head function with single file", function() {
 });
 
 describe("Head function with multiple file", function() {
+  let expectedOutput;
+
   it("should return the first ten lines of file when count is not specified", function() {
     expectedOutput =
       "==> names <==\nmahesh\nswapnil\narnab\naftab\ndheeraj\n\n==> names <==\nmahesh\nswapnil\narnab\naftab\ndheeraj";
@@ -124,6 +126,8 @@ describe("Head function with multiple file", function() {
 });
 
 describe("Head function errors handling", function() {
+  let expectedOutput;
+
   it("should return the error message when number of lines is given zero with n without spaces", function() {
     expectedOutput = "head: illegal line count -- 0";
     assert.deepEqual(head(["-n0", "names", "numbers"], fs), expectedOutput);
@@ -190,7 +194,6 @@ describe("Head function errors handling", function() {
   });
 });
 
-
 describe("Tail function with single file", function() {
   it("should return the first ten lines of file when count is not specified", function() {
     assert.deepEqual(
@@ -221,6 +224,8 @@ describe("Tail function with single file", function() {
 });
 
 describe("Tail function with multiple file", function() {
+  let expectedOutput;
+
   it("should return the first ten lines of file when count is not specified", function() {
     expectedOutput =
       "==> names <==\nmahesh\nswapnil\narnab\naftab\ndheeraj\n\n==> names <==\nmahesh\nswapnil\narnab\naftab\ndheeraj";
@@ -256,6 +261,8 @@ describe("Tail function with multiple file", function() {
 });
 
 describe("Tail function errors handling", function() {
+  let expectedOutput;
+
   it("should return the string with one space when number of lines is given zero with n without spaces", function() {
     assert.deepEqual(tail(["-n0", "names", "numbers"], fs), " ");
   });
@@ -344,12 +351,13 @@ describe("isValidSingleFile", function() {
 });
 
 describe("generateRequiredContent function for single files", function() {
+  let inputData;
   it("should return when operation head is specified with count and option(-n)", function() {
     inputData = {
       count: 2,
       files: ["names"],
       funcName: "head",
-      option:"n"
+      option: "n"
     };
     assert.deepEqual(generateRequiredContent(inputData, fs), "mahesh\nswapnil");
   });
@@ -359,7 +367,7 @@ describe("generateRequiredContent function for single files", function() {
       count: 2,
       files: ["numbers"],
       funcName: "tail",
-      option:"n"
+      option: "n"
     };
     assert.deepEqual(generateRequiredContent(inputData, fs), "four\nfive");
   });
@@ -369,7 +377,7 @@ describe("generateRequiredContent function for single files", function() {
       count: 6,
       files: ["names"],
       funcName: "head",
-      option : "c"
+      option: "c"
     };
     assert.deepEqual(generateRequiredContent(inputData, fs), "mahesh");
   });
@@ -379,19 +387,21 @@ describe("generateRequiredContent function for single files", function() {
       count: 6,
       files: ["numbers"],
       funcName: "tail",
-      option : "c"
+      option: "c"
     };
     assert.deepEqual(generateRequiredContent(inputData, fs), "r\nfive");
   });
 });
 
 describe("generateRequiredContent function for multiple files", function() {
+  let inputData;
+
   it("should return when operation head is specified with count and option(-n)", function() {
     inputData = {
       count: 2,
       files: ["names", "numbers"],
       funcName: "head",
-      option : "n"
+      option: "n"
     };
     expectedOutput =
       "==> names <==\nmahesh\nswapnil\n\n==> numbers <==\none\ntwo";
@@ -403,7 +413,7 @@ describe("generateRequiredContent function for multiple files", function() {
       count: 2,
       files: ["names", "numbers"],
       funcName: "tail",
-      option : "n"
+      option: "n"
     };
     expectedOutput =
       "==> names <==\naftab\ndheeraj\n\n==> numbers <==\nfour\nfive";
@@ -415,7 +425,7 @@ describe("generateRequiredContent function for multiple files", function() {
       count: 10,
       files: ["names", "numbers"],
       funcName: "head",
-      option : "c"
+      option: "c"
     };
     expectedOutput =
       "==> names <==\nmahesh\nswa\n\n==> numbers <==\none\ntwo\nth";
@@ -427,7 +437,7 @@ describe("generateRequiredContent function for multiple files", function() {
       count: 10,
       files: ["names", "numbers"],
       funcName: "tail",
-      option : "c"
+      option: "c"
     };
     expectedOutput =
       "==> names <==\nab\ndheeraj\n\n==> numbers <==\n\nfour\nfive";

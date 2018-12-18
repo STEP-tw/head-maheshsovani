@@ -4,17 +4,19 @@ const isInvalidOption = function(option) {
   return !["n", "c"].includes(option);
 };
 
-const isIllegalCount = function(count){
-  return isNaN(count)|| count < 1 ;  
-}
+const isIllegalCount = function(count) {
+  return isNaN(count) || count < 1;
+};
 
 const invalidOptionError = function(funcName, option) {
   let errors = {
     head:
-      "head: illegal option -- " + option +
+      "head: illegal option -- " +
+      option +
       "\nusage: head [-n lines | -c bytes] [file ...]",
     tail:
-      "tail: illegal option --  " + option +
+      "tail: illegal option --  " +
+      option +
       "\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]"
   };
   return errors[funcName];
@@ -38,7 +40,7 @@ const manageHeadErrors = function(inputDetails) {
   let { option, count, files } = parseInput(inputDetails);
 
   if (files.includes("0") || count == 0) {
-    return illegalCountError("head", 0 , "n");
+    return illegalCountError("head", 0, "n");
   }
 
   if (isInvalidOption(option)) {

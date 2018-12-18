@@ -1,12 +1,15 @@
 const { parseInput } = require("./parser.js");
 const { manageHeadErrors, manageTailErrors } = require("./errorHandler.js");
 
-const seperator = { n: '\n', c: '' };
+const seperator = { n: "\n", c: "" };
 
-const extractRequiredContent = function(option, count, operation,file) {
-	let ranges = { head: [0, count], tail: [-count] };
-	let range = ranges[operation];
-	return file.split(seperator[option]).slice(range[0], range[1]).join(seperator[option]);
+const extractRequiredContent = function(option, count, operation, file) {
+  let ranges = { head: [0, count], tail: [-count] };
+  let range = ranges[operation];
+  return file
+    .split(seperator[option])
+    .slice(range[0], range[1])
+    .join(seperator[option]);
 };
 
 const generateHeader = function(fileName) {
@@ -23,8 +26,8 @@ const isValidSingleFile = function(files, existsSync) {
 
 const generateRequiredContent = function(details, fs) {
   const { existsSync, readFileSync } = fs;
-  const { files, funcName, count,option } = details;
-  let getContent = extractRequiredContent.bind(null,option ,count ,funcName );
+  const { files, funcName, count, option } = details;
+  let getContent = extractRequiredContent.bind(null, option, count, funcName);
   let delimeter = "";
   let content = [];
 
@@ -46,14 +49,18 @@ const generateRequiredContent = function(details, fs) {
 
 const head = function(inputDetails, fs) {
   let { option, count, files } = parseInput(inputDetails);
-  let fileDetails = { count, files, funcName: "head" ,option};
-  return manageHeadErrors(inputDetails) || generateRequiredContent(fileDetails, fs);
+  let fileDetails = { count, files, funcName: "head", option };
+  return (
+    manageHeadErrors(inputDetails) || generateRequiredContent(fileDetails, fs)
+  );
 };
 
 const tail = function(inputDetails, fs) {
   let { option, count, files } = parseInput(inputDetails);
-  let fileDetails = { count ,files,funcName: "tail",option };
-  return manageTailErrors(inputDetails) || generateRequiredContent(fileDetails, fs)
+  let fileDetails = { count, files, funcName: "tail", option };
+  return (
+    manageTailErrors(inputDetails) || generateRequiredContent(fileDetails, fs)
+  );
 };
 
 module.exports = {
