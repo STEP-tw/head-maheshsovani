@@ -14,31 +14,25 @@ const hasDash = function(option) {
   return option.startsWith("-");
 }
 
+const createObject = function(option,count,files){
+  return {option , count , files}
+}
+
 const parseInput = function(details) {
+
   if (details[0][0] === "-" && !isNaN(details[0])) {
-    return {
-      option: "n",
-      count: Math.abs(details[0]),
-      files: details.slice(1)
-    };
+    return createObject("n" , Math.abs(details[0]),details.slice(1));
   }
+
   if (isOnlyOption(details[0])) {
-    return {
-      option: details[0][1],
-      count: details[1],
-      files: details.slice(2)
-    };
+    return createObject(details[0][1] , details[1] ,details.slice(2));
   }
+
   if (isOptionWithCount(details[0])) {
-    return {
-      option: details[0][1],
-      count: details[0].slice(2),
-      files: details.slice(1)
-    };
+    return createObject(details[0][1] , details[0].slice(2) ,details.slice(1));
   }
-  return { option: "n", count: 10, files: details };
-};
 
+  return createObject("n",10,details) 
+}
 
-
-module.exports = { parseInput, isOptionWithCount };
+module.exports = { parseInput, isOptionWithCount, hasOption ,isOnlyOption , hasDash };
