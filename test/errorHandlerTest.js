@@ -59,3 +59,48 @@ describe('invalidOptionError', function() {
 		assert.deepEqual(invalidOptionError('tail','z'), expectedOutput);
 	});
 });
+describe('manageHeadErrors', function() {
+	it('should return error when option given is invalid', function() {
+    inputData = ["-x3","numbers"]
+		expectedOutput =
+			'head: illegal option -- x\nusage: head [-n lines | -c bytes] [file ...]';
+		assert.deepEqual(manageHeadErrors(inputData), expectedOutput);
+	});
+
+	it('should return error when invalid count is given', function() {
+    inputData = ["-n-3","numbers"]
+		expectedOutput = "head: illegal line count -- -3"
+		assert.deepEqual(manageHeadErrors(inputData), expectedOutput);
+  });
+
+  it('should return error when invalid count is given', function() {
+    inputData = ["-c-3","numbers"]
+		expectedOutput = "head: illegal byte count -- -3"
+		assert.deepEqual(manageHeadErrors(inputData), expectedOutput);
+  });
+
+  it('should return error when count given is 0', function() {
+    inputData = ["-0","numbers"]
+		expectedOutput = "head: illegal line count -- 0"
+		assert.deepEqual(manageHeadErrors(inputData), expectedOutput);
+  });
+});
+
+describe('manageTailErrors', function() {
+	it('should return error when option given is invalid', function() {
+    inputData = ["-x3","numbers"]
+    expectedOutput = "tail: illegal option --  x\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]";
+		assert.deepEqual(manageTailErrors(inputData), expectedOutput);
+	});
+
+	it('should return error when invalid count is given', function() {
+    inputData = ["-0","numbers"]
+		assert.deepEqual(manageTailErrors(inputData), ' ');
+  });
+
+  it('should return error when invalid count is given', function() {
+    inputData = ["-caa3","numbers"]
+		expectedOutput = "tail: illegal offset -- aa3"
+		assert.deepEqual(manageTailErrors(inputData), expectedOutput);
+  });
+});
