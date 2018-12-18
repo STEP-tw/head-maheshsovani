@@ -20,7 +20,7 @@ const createObject = function(option,count,files){
 
 const parseInput = function(details) {
 
-  if (details[0][0] === "-" && !isNaN(details[0])) {
+  if (details[0].startsWith("-") && !isNaN(details[0])) {
     return createObject("n" , Math.abs(details[0]),details.slice(1));
   }
 
