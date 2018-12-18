@@ -68,7 +68,7 @@ describe("Head function with single file", function() {
   });
 
   it("should return the given number of lines when only count is given", function() {
-    assert.deepEqual(head([-3, "names"], fs), "mahesh\nswapnil\narnab");
+    assert.deepEqual(head(["-3", "names"], fs), "mahesh\nswapnil\narnab");
   });
 
   it("should return the given number of lines when count and option is given without spaces", function() {
@@ -98,7 +98,7 @@ describe("Head function with multiple file", function() {
   it("should return the given number of lines when only count is given", function() {
     expectedOutput =
       "==> names <==\nmahesh\nswapnil\narnab\n\n==> numbers <==\none\ntwo\nthree";
-    assert.deepEqual(head([-3, "names", "numbers"], fs), expectedOutput);
+    assert.deepEqual(head(["-3", "names", "numbers"], fs), expectedOutput);
   });
 
   it("should return the given number of lines when count and option is given without spaces", function() {
@@ -200,7 +200,7 @@ describe("Tail function with single file", function() {
   });
 
   it("should return the given number of lines when only count is given", function() {
-    assert.deepEqual(tail([-3, "names"], fs), "arnab\naftab\ndheeraj");
+    assert.deepEqual(tail(["-3", "names"], fs), "arnab\naftab\ndheeraj");
   });
 
   it("should return the given number of lines when count and option is given without spaces", function() {
@@ -230,7 +230,7 @@ describe("Tail function with multiple file", function() {
   it("should return the given number of lines when only count is given", function() {
     expectedOutput =
       "==> names <==\narnab\naftab\ndheeraj\n\n==> numbers <==\nthree\nfour\nfive";
-    assert.deepEqual(tail([-3, "names", "numbers"], fs), expectedOutput);
+    assert.deepEqual(tail(["-3", "names", "numbers"], fs), expectedOutput);
   });
 
   it("should return the given number of lines when count and option is given without spaces", function() {

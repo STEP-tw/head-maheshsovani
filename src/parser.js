@@ -1,7 +1,28 @@
-const parseInput = function (details) {
-  let defaultParameters = { option: "n", count: 10, files: details };
+let hasOption = function(details) {
+  return hasDash(details) && details[1].match(/[A-z]/);
+};
 
-  if (isValidOption(details[0])) {
+const isOptionWithCount = function(details) {
+  return hasDash(details) && details.length > 2;
+};
+
+const isOnlyOption = function(details){
+  return hasOption(details) && details.length == 2;
+}
+
+const hasDash = function(option) {
+  return option.startsWith("-");
+}
+
+const parseInput = function(details) {
+  if (details[0][0] === "-" && !isNaN(details[0])) {
+    return {
+      option: "n",
+      count: Math.abs(details[0]),
+      files: details.slice(1)
+    };
+  }
+  if (isOnlyOption(details[0])) {
     return {
       option: details[0][1],
       count: details[1],
@@ -15,22 +36,9 @@ const parseInput = function (details) {
       files: details.slice(1)
     };
   }
-  if (parseInt(details[0])) {
-    return {
-      option: "n",
-      count: Math.abs(details[0]),
-      files: details.slice(1)
-    };
-  }
-  return defaultParameters;
+  return { option: "n", count: 10, files: details };
 };
 
-const isValidOption = function(option){
-  return ["-n","-c"].includes(option); 
-};
 
-const isOptionWithCount = function(details){
-  return ( details[0]==='-' && details.length > 2 );
-};
 
-module.exports = { parseInput , isOptionWithCount ,isValidOption }
+module.exports = { parseInput, isOptionWithCount };

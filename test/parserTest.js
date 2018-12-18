@@ -1,8 +1,7 @@
 const assert = require("assert");
 const {
   parseInput,
-  isOptionWithCount,
-  isValidOption
+  isOptionWithCount
 } = require("../src/parser.js");
 describe("parseInput", function() {
   let inputData;
@@ -15,7 +14,7 @@ describe("parseInput", function() {
   });
 
   it("should give default option -n and count as given when option is not specified", function() {
-    inputData = [-15, "names", "numbers"];
+    inputData = ["-15", "names", "numbers"];
     expectedOutput = {
       option: "n",
       count: 15,
@@ -58,18 +57,6 @@ describe("parseInput", function() {
       files: ["names", "numbers"]
     };
     assert.deepEqual(parseInput(inputData), expectedOutput);
-  });
-});
-
-describe("isValidOption Function", function() {
-  it("should return true when option given is either -n or -c ", function() {
-    assert.equal(isValidOption("-n"), true);
-    assert.equal(isValidOption("-c"), true);
-  });
-
-  it("should return false when option given is neither -n nor -c", function() {
-    assert.equal(isValidOption("-x"), false);
-    assert.equal(isValidOption("-y"), false);
   });
 });
 

@@ -1,18 +1,11 @@
 const { parseInput } = require('./parser.js');
 
-const isInvalidOption = function (inputDetails) {
-  return (
-    inputDetails[0][0] == "-" &&
-    inputDetails[0][1] != "n" &&
-    inputDetails[0][1] != "c" &&
-    !parseInt(inputDetails[0])
-  );
+const isInvalidOption = function (option) {
+  return (!["n","c"].includes(option));
 };
 
-const hasZero = function (inputDetails) {
-  return (inputDetails[0][0] == '-'
-    && inputDetails[0][1] == 0
-    || inputDetails[0][2] == 0);
+const hasZero = function (option,count) {
+  return (option == 0  || count == 0)
 };
 
 const selectIllegalOption = function (funcName, option) {
@@ -25,22 +18,22 @@ const selectIllegalOption = function (funcName, option) {
   return errors[funcName];
 };
 
-const checkValidOption = function (functionName, inputDetails) {
-  if (isInvalidOption(inputDetails)) {
-    return selectIllegalOption(functionName, inputDetails[0][1])
+const checkValidOption = function (functionName, option) {
+  if (isInvalidOption(option)) {
+    return selectIllegalOption(functionName, option)
   }
 }
 
 const manageHeadErrors = function(inputDetails){
-  let { option, count, files } = parseInput(inputDetails);
+  let { option, count, files} = parseInput(inputDetails);
 
 
-  if (inputDetails[0] == 0 || count == 0) {
+  if (files.includes("0")  || count == 0) {
     return "head: illegal line count -- 0";
   }
 
-  if (checkValidOption("head", inputDetails)) {
-    return checkValidOption("head", inputDetails);
+  if (checkValidOption("head", option)) {
+    return checkValidOption("head", option);
   }
 
   if (isNaN(count) || count < 1) {
@@ -53,12 +46,12 @@ const manageHeadErrors = function(inputDetails){
 const manageTailErrors = function(inputDetails){
   let { option, count, files } = parseInput(inputDetails);
 
-  if (hasZero(inputDetails)) {
+  if (hasZero(option, count)) {
     return ' ';
   }
 
-  if (checkValidOption("tail", inputDetails)) {
-    return checkValidOption("tail", inputDetails);
+  if (checkValidOption("tail", option)) {
+    return checkValidOption("tail",option);
   }
 
   if (isNaN(count)) {
