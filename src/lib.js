@@ -48,15 +48,15 @@ const generateRequiredContent = function(details, fs) {
 };
 
 const head = function(inputDetails, fs) {
-  let { option, count, files } = parseInput(inputDetails);
+  let { option, count, files } = inputDetails ;
   let fileDetails = { count, files, funcName: "head", option };
-  return (
-    manageHeadErrors(inputDetails) || generateRequiredContent(fileDetails, fs)
+  return (manageHeadErrors(inputDetails) || generateRequiredContent(fileDetails, fs)
   );
 };
 
 const tail = function(inputDetails, fs) {
-  let { option, count, files } = parseInput(inputDetails);
+  console.log(inputDetails)
+  let { option, count, files } = inputDetails ;
   let fileDetails = { count, files, funcName: "tail", option };
   return (
     manageTailErrors(inputDetails) || generateRequiredContent(fileDetails, fs)

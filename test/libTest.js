@@ -62,29 +62,29 @@ describe("extractRequiredContent", function() {
 describe("Head function with single file", function() {
   it("should return the first ten lines of file when count is not specified", function() {
     assert.deepEqual(
-      head(["names"], fs),
+      head({count : 10 , option : "n" ,files : ["names"]}, fs),
       "mahesh\nswapnil\narnab\naftab\ndheeraj"
     );
   });
 
   it("should return the given number of lines when only count is given", function() {
-    assert.deepEqual(head(["-3", "names"], fs), "mahesh\nswapnil\narnab");
+    assert.deepEqual(head({count:3, files:["names"],option:"n"}, fs), "mahesh\nswapnil\narnab");
   });
 
   it("should return the given number of lines when count and option is given without spaces", function() {
-    assert.deepEqual(head(["-n2", "names"], fs), "mahesh\nswapnil");
+    assert.deepEqual(head({count:2, files:["names"],option:"n"},fs), "mahesh\nswapnil");
   });
 
   it("should return the given number of lines when count and option is given with spaces", function() {
-    assert.deepEqual(head(["-n", "1", "names"], fs), "mahesh");
+    assert.deepEqual(head({count:1, files:["names"],option:"n"},fs), "mahesh");
   });
 
   it("should return the given number of characters when count is given with spaces", function() {
-    assert.deepEqual(head(["-c", "3", "names"], fs), "mah");
+    assert.deepEqual(head({count:3, files:["names"],option:"c"},fs), "mah");
   });
 
   it("should return the given number of characters when count is given without spaces", function() {
-    assert.deepEqual(head(["-c6", "names"], fs), "mahesh");
+    assert.deepEqual(head({count:6, files:["names"],option:"c"},fs), "mahesh");
   });
 });
 
@@ -94,34 +94,34 @@ describe("Head function with multiple file", function() {
   it("should return the first ten lines of file when count is not specified", function() {
     expectedOutput =
       "==> names <==\nmahesh\nswapnil\narnab\naftab\ndheeraj\n\n==> names <==\nmahesh\nswapnil\narnab\naftab\ndheeraj";
-    assert.deepEqual(head(["names", "names"], fs), expectedOutput);
+    assert.deepEqual(head({count:10, files:["names","names"],option:"n"},fs), expectedOutput);
   });
 
   it("should return the given number of lines when only count is given", function() {
     expectedOutput =
       "==> names <==\nmahesh\nswapnil\narnab\n\n==> numbers <==\none\ntwo\nthree";
-    assert.deepEqual(head(["-3", "names", "numbers"], fs), expectedOutput);
+    assert.deepEqual(head({count:3, files:["names","numbers"],option:"n"},fs), expectedOutput);
   });
 
   it("should return the given number of lines when count and option is given without spaces", function() {
     expectedOutput =
       "==> names <==\nmahesh\nswapnil\n\n==> numbers <==\none\ntwo";
-    assert.deepEqual(head(["-n2", "names", "numbers"], fs), expectedOutput);
+    assert.deepEqual(head({count:2, files:["names","numbers"],option:"n"},fs), expectedOutput);
   });
 
   it("should return the given number of lines when count and option is given with spaces", function() {
     expectedOutput = "==> names <==\nmahesh\n\n==> numbers <==\none";
-    assert.deepEqual(head(["-n", "1", "names", "numbers"], fs), expectedOutput);
+    assert.deepEqual(head({count:1, files:["names","numbers"],option:"n"},fs), expectedOutput);
   });
 
   it("should return the given number of characters when count is given with spaces", function() {
     expectedOutput = "==> names <==\nmah\n\n==> numbers <==\none";
-    assert.deepEqual(head(["-c", "3", "names", "numbers"], fs), expectedOutput);
+    assert.deepEqual(head({count:3, files:["names","numbers"],option:"c"}, fs), expectedOutput);
   });
 
   it("should return the given number of characters when count is given without spaces", function() {
     expectedOutput = "==> names <==\nmahesh\n\n==> numbers <==\none\ntw";
-    assert.deepEqual(head(["-c6", "names", "numbers"], fs), expectedOutput);
+    assert.deepEqual(head({count:6, files:["names", "numbers"],option:"c"},fs), expectedOutput);
   });
 });
 
@@ -130,96 +130,86 @@ describe("Head function errors handling", function() {
 
   it("should return the error message when number of lines is given zero with n without spaces", function() {
     expectedOutput = "head: illegal line count -- 0";
-    assert.deepEqual(head(["-n0", "names", "numbers"], fs), expectedOutput);
+    assert.deepEqual(head({count:0, files:["names", "numbers"],option:"n"},fs), expectedOutput);
   });
 
   it("should return the error message when  is count is given zero only without -c or -n", function() {
     expectedOutput = "head: illegal line count -- 0";
-    assert.deepEqual(head(["-0", "names", "numbers"], fs), expectedOutput);
+    assert.deepEqual(head({count:0, files:["names", "numbers"],option:"n"},fs), expectedOutput);
   });
 
   it("should return the error message when  is count is given zero only without -c or -n", function() {
     expectedOutput = "head: illegal line count -- 0";
-    assert.deepEqual(head(["0", "names", "numbers"], fs), expectedOutput);
+    assert.deepEqual(head({count:0, files:["0", "numbers"],option:"n"},fs), expectedOutput);
   });
 
   it("should return the error message when  is count is invalid with -c or -n", function() {
     expectedOutput = "head: illegal line count -- -12";
-    assert.deepEqual(head(["-n-12", "names", "numbers"], fs), expectedOutput);
+    assert.deepEqual(head({count:-12, files:["names", "numbers"],option:"n"},fs), expectedOutput);
   });
 
   it("should return the error message when  file is not present in the directory", function() {
     expectedOutput =
       "head: README.mdafs: No such file or directory\n==> numbers <==\none\ntwo\nthree";
-    assert.deepEqual(
-      head(["-n3", "README.mdafs", "numbers"], fs),
-      expectedOutput
-    );
+    assert.deepEqual( head({count:3, files:["README.mdafs", "numbers"],option:"n"},fs) , expectedOutput );
   });
 
   it("should return the error message when option other than -c or -n is given ", function() {
     expectedOutput =
       "head: illegal option -- x\nusage: head [-n lines | -c bytes] [file ...]";
-    assert.deepEqual(
-      head(["-x3", "README.mdafs", "numbers"], fs),
-      expectedOutput
-    );
+    assert.deepEqual( head({count:3, files:["names", "numbers"],option:"x"},fs) , expectedOutput );
   });
 
   it("should return the error message when option other than -c or -n is given ", function() {
     expectedOutput =
       "head: illegal option -- z\nusage: head [-n lines | -c bytes] [file ...]";
-    assert.deepEqual(
-      head(["-z", "README.mdafs", "numbers"], fs),
-      expectedOutput
-    );
+    assert.deepEqual( head({count:10, files:["names", "numbers"],option:"z"},fs) , expectedOutput );
   });
 
   it("should return the error message when option is correct but only one file which doesn't exist is given", function() {
     expectedOutput = "head: README.mdafs: No such file or directory";
-    assert.deepEqual(head(["-n3", "README.mdafs"], fs), expectedOutput);
+    assert.deepEqual( head({count:10, files:["README.mdafs"],option:"n"},fs) , expectedOutput );
   });
+
 
   it("should return the error message when -n or -c and then alphanumeric combination is given ", function() {
     expectedOutput = "head: illegal line count -- u922";
-    assert.deepEqual(
-      head(["-nu922", "README.mdafs", "numbers"], fs),
-      expectedOutput
-    );
+    assert.deepEqual( head({count:"u922", files:["README.mdafs"],option:"n"},fs) , expectedOutput );
+
     expectedOutput = "head: illegal byte count -- u922";
-    assert.deepEqual(
-      head(["-cu922", "README.mdafs", "numbers"], fs),
-      expectedOutput
-    );
+    assert.deepEqual( head({count:"u922", files:["README.mdafs","numbers"],option:"c"},fs) , expectedOutput );
+
   });
 });
 
 describe("Tail function with single file", function() {
   it("should return the first ten lines of file when count is not specified", function() {
-    assert.deepEqual(
-      tail(["names"], fs),
-      "mahesh\nswapnil\narnab\naftab\ndheeraj"
-    );
+      expectedOutput = "mahesh\nswapnil\narnab\naftab\ndheeraj"
+    assert.deepEqual( tail({count:10, files:["names"],option:"n"},fs) , expectedOutput );
+
   });
 
   it("should return the given number of lines when only count is given", function() {
-    assert.deepEqual(tail(["-3", "names"], fs), "arnab\naftab\ndheeraj");
+    expectedOutput = "arnab\naftab\ndheeraj";
+    assert.deepEqual( tail({count:3, files:["names"],option:"n"},fs) , expectedOutput );
   });
 
   it("should return the given number of lines when count and option is given without spaces", function() {
-    assert.deepEqual(tail(["-n2", "names"], fs), "aftab\ndheeraj");
+    expectedOutput = "aftab\ndheeraj";
+    assert.deepEqual( tail({count:2, files:["names"],option:"n"},fs) , expectedOutput );
   });
 
   it("should return the given number of lines when count and option is given with spaces", function() {
-    assert.deepEqual(tail(["-n", "1", "names"], fs), "dheeraj");
+    expectedOutput = "dheeraj"
+    assert.deepEqual( tail({count:1, files:["names"],option:"n"},fs) , expectedOutput );
   });
 
   it("should return the given number of characters when count is given with spaces", function() {
-    assert.deepEqual(tail(["-c", "3", "names"], fs), "raj");
+    assert.deepEqual( tail({count:3, files:["names"],option:"c"},fs) ,"raj" );
   });
 
   it("should return the given number of characters when count is given without spaces", function() {
-    assert.deepEqual(tail(["-c6", "names"], fs), "heeraj");
+    assert.deepEqual( tail({count:6, files:["names"],option:"c"},fs) , "heeraj" );
   });
 });
 
@@ -229,34 +219,35 @@ describe("Tail function with multiple file", function() {
   it("should return the first ten lines of file when count is not specified", function() {
     expectedOutput =
       "==> names <==\nmahesh\nswapnil\narnab\naftab\ndheeraj\n\n==> names <==\nmahesh\nswapnil\narnab\naftab\ndheeraj";
-    assert.deepEqual(tail(["names", "names"], fs), expectedOutput);
+    assert.deepEqual( tail({count:10, files:["names","names"],option:"n"},fs) , expectedOutput);
   });
 
   it("should return the given number of lines when only count is given", function() {
     expectedOutput =
       "==> names <==\narnab\naftab\ndheeraj\n\n==> numbers <==\nthree\nfour\nfive";
-    assert.deepEqual(tail(["-3", "names", "numbers"], fs), expectedOutput);
+    assert.deepEqual( tail({count:3, files:["names","numbers"],option:"n"},fs) , expectedOutput);
+
   });
 
   it("should return the given number of lines when count and option is given without spaces", function() {
     expectedOutput =
       "==> names <==\naftab\ndheeraj\n\n==> numbers <==\nfour\nfive";
-    assert.deepEqual(tail(["-n2", "names", "numbers"], fs), expectedOutput);
+    assert.deepEqual( tail({count:2, files:["names","numbers"],option:"n"},fs) , expectedOutput);
   });
 
   it("should return the given number of lines when count and option is given with spaces", function() {
     expectedOutput = "==> names <==\ndheeraj\n\n==> numbers <==\nfive";
-    assert.deepEqual(tail(["-n", "1", "names", "numbers"], fs), expectedOutput);
+    assert.deepEqual( tail({count:1, files:["names","numbers"],option:"n"},fs) , expectedOutput);
   });
 
   it("should return the given number of characters when count is given with spaces", function() {
     expectedOutput = "==> names <==\nraj\n\n==> numbers <==\nive";
-    assert.deepEqual(tail(["-c", "3", "names", "numbers"], fs), expectedOutput);
+    assert.deepEqual( tail({count:3, files:["names","numbers"],option:"c"},fs) , expectedOutput);
   });
 
   it("should return the given number of characters when count is given without spaces", function() {
     expectedOutput = "==> names <==\nheeraj\n\n==> numbers <==\nr\nfive";
-    assert.deepEqual(tail(["-c6", "names", "numbers"], fs), expectedOutput);
+    assert.deepEqual( tail({count:6, files:["names","numbers"],option:"c"},fs) , expectedOutput);
   });
 });
 
@@ -264,56 +255,43 @@ describe("Tail function errors handling", function() {
   let expectedOutput;
 
   it("should return the string with one space when number of lines is given zero with n without spaces", function() {
-    assert.deepEqual(tail(["-n0", "names", "numbers"], fs), " ");
+    assert.deepEqual( tail({count:0, files:["names","numbers"],option:"n"},fs) , " ");
   });
 
   it("should return the string with one space when  is count is given zero only without -c or -n", function() {
-    assert.deepEqual(tail(["-0", "names", "numbers"], fs), " ");
+    assert.deepEqual( tail({count:0, files:["names","numbers"],option:"n"},fs) , " ");
   });
 
   it("should return the error message when  file is not present in the directory", function() {
     expectedOutput =
       "tail: README.mdafs: No such file or directory\n==> numbers <==\nthree\nfour\nfive";
-    assert.deepEqual(
-      tail(["-n3", "README.mdafs", "numbers"], fs),
-      expectedOutput
-    );
+    assert.deepEqual( tail({count:3, files:["README.mdafs", "numbers"],option:"n"},fs) , expectedOutput);
+   
   });
 
   it("should return the error message when option other than -c or -n is given ", function() {
     expectedOutput =
       "tail: illegal option --  x\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]";
-    assert.deepEqual(
-      tail(["-x3", "README.mdafs", "numbers"], fs),
-      expectedOutput
-    );
+    assert.deepEqual( tail({count:3, files:["README.mdafs", "numbers"],option:"x"},fs) , expectedOutput);
   });
 
   it("should return the error message when option other than -c or -n is given ", function() {
     expectedOutput =
       "tail: illegal option --  z\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]";
-    assert.deepEqual(
-      tail(["-z", "README.mdafs", "numbers"], fs),
-      expectedOutput
-    );
+    assert.deepEqual( tail({count:10, files:["README.mdafs", "numbers"],option:"z"},fs) , expectedOutput);
   });
 
   it("should return the error message when option is correct but only one file which doesn't exist is given", function() {
     expectedOutput = "tail: README.mdafs: No such file or directory";
-    assert.deepEqual(tail(["-n3", "README.mdafs"], fs), expectedOutput);
+    assert.deepEqual( tail({count:3, files:["README.mdafs"],option:"n"},fs) , expectedOutput);
   });
 
   it("should return the error message when -n or -c and then alphanumeric combination is given ", function() {
     expectedOutput = "tail: illegal offset -- u922";
-    assert.deepEqual(
-      tail(["-nu922", "README.mdafs", "numbers"], fs),
-      expectedOutput
-    );
+    assert.deepEqual( tail({count:"u922", files:["README.mdafs", "numbers"],option:"n"},fs) , expectedOutput); 
+    
     expectedOutput = "tail: illegal offset -- u922";
-    assert.deepEqual(
-      tail(["-cu922", "README.mdafs", "numbers"], fs),
-      expectedOutput
-    );
+    assert.deepEqual( tail({count:"u922", files:["README.mdafs", "numbers"],option:"c"},fs) , expectedOutput); 
   });
 });
 

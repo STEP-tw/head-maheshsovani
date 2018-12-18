@@ -37,7 +37,8 @@ const illegalCountError = function(funcName, count, option) {
 };
 
 const manageHeadErrors = function(inputDetails) {
-  let { option, count, files } = parseInput(inputDetails);
+  
+  let { option, count, files } = inputDetails;
 
   if (files.includes("0") || count == 0) {
     return illegalCountError("head", 0, "n");
@@ -50,10 +51,11 @@ const manageHeadErrors = function(inputDetails) {
   if (isIllegalCount(count)) {
     return illegalCountError("head", count, option);
   }
+  return false;
 };
 
 const manageTailErrors = function(inputDetails) {
-  let { option, count } = parseInput(inputDetails);
+  let { option, count } = inputDetails;
 
   if (count == 0) {
     return " ";
@@ -66,6 +68,7 @@ const manageTailErrors = function(inputDetails) {
   if (isNaN(count)) {
     return illegalCountError("tail", count, option);
   }
+  return false;s
 };
 
 module.exports = {
