@@ -8,7 +8,7 @@ const hasZero = function (option,count) {
   return (option == 0  || count == 0)
 };
 
-const selectIllegalOption = function (funcName, option) {
+const invalidOptionError = function (funcName, option) {
   let errors = {
     "head": "head: illegal option -- " + option +
       "\nusage: head [-n lines | -c bytes] [file ...]",
@@ -20,7 +20,7 @@ const selectIllegalOption = function (funcName, option) {
 
 const checkValidOption = function (functionName, option) {
   if (isInvalidOption(option)) {
-    return selectIllegalOption(functionName, option)
+    return invalidOptionError(functionName, option)
   }
 }
 
