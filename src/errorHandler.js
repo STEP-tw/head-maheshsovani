@@ -11,12 +11,10 @@ const isIllegalCount = function(count){
 const invalidOptionError = function(funcName, option) {
   let errors = {
     head:
-      "head: illegal option -- " +
-      option +
+      "head: illegal option -- " + option +
       "\nusage: head [-n lines | -c bytes] [file ...]",
     tail:
-      "tail: illegal option --  " +
-      option +
+      "tail: illegal option --  " + option +
       "\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]"
   };
   return errors[funcName];
@@ -70,5 +68,9 @@ const manageTailErrors = function(inputDetails) {
 
 module.exports = {
   manageHeadErrors,
-  manageTailErrors
+  manageTailErrors,
+  isInvalidOption,
+  isIllegalCount,
+  invalidOptionError,
+  illegalCountError
 };
