@@ -4,6 +4,10 @@ const isInvalidOption = function(option) {
   return !["n", "c"].includes(option);
 };
 
+const isIllegalCount = function(count){
+  return isNaN(count)|| count < 1 ;  
+}
+
 const invalidOptionError = function(funcName, option) {
   let errors = {
     head:
@@ -43,7 +47,7 @@ const manageHeadErrors = function(inputDetails) {
     return invalidOptionError("head", option);
   }
 
-  if (isNaN(count) || count < 1) {
+  if (isIllegalCount(count)) {
     return illegalCountError("head", count, option);
   }
 };
