@@ -292,6 +292,14 @@ describe("Tail function with single file", function() {
       "heeraj"
     );
   });
+
+  it("should return the lines if negative count is specified", function() {
+    expectedOutput = "five";
+    assert.deepEqual(
+        tail({ count: -1, files: ["numbers"], option: "n" }, fs),
+        expectedOutput
+    );
+});
 });
 
 describe("Tail function with multiple file", function() {

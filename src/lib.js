@@ -54,7 +54,7 @@ const head = function(inputDetails, fs) {
 
 const tail = function(inputDetails, fs) {
   let { option, count, files } = inputDetails;
-  let fileDetails = { count, files, command: "tail", option };
+  let fileDetails = { count:Math.abs(count), files, command: "tail", option };
   return (
     manageTailErrors(inputDetails) ||
     generateRequiredContent(fileDetails, fs)
