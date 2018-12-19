@@ -1,5 +1,3 @@
-const { parseInput } = require("./parser.js");
-
 const isInvalidOption = function(option) {
   return !["n", "c"].includes(option);
 };
@@ -37,7 +35,6 @@ const illegalCountError = function(funcName, count, option) {
 };
 
 const manageHeadErrors = function(inputDetails) {
-  
   let { option, count, files } = inputDetails;
 
   if (files.includes("0") || count == 0) {
@@ -68,7 +65,7 @@ const manageTailErrors = function(inputDetails) {
   if (isNaN(count)) {
     return illegalCountError("tail", count, option);
   }
-  return false;s
+  return false;
 };
 
 module.exports = {
