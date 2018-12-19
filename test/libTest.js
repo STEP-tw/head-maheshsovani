@@ -401,6 +401,7 @@ describe("Tail function errors handling", function() {
     );
   });
 
+
   it("should return the error message when -n or -c and then alphanumeric combination is given ", function() {
     expectedOutput = "tail: illegal offset -- u922";
     assert.deepEqual(

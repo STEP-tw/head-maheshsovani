@@ -53,7 +53,6 @@ const head = function(inputDetails, fs) {
 };
 
 const tail = function(inputDetails, fs) {
-  console.log(inputDetails);
   let { option, count, files } = inputDetails;
   let fileDetails = { count, files, command: "tail", option };
   return (
