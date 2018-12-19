@@ -377,7 +377,7 @@ describe("Tail function errors handling", function() {
 
   it("should return the error message when option other than -c or -n is given ", function() {
     expectedOutput =
-      "tail: illegal option --  x\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]";
+      "tail: illegal option -- x\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]";
     assert.deepEqual(
       tail({ count: 3, files: ["README.mdafs", "numbers"], option: "x" }, fs),
       expectedOutput
@@ -386,7 +386,7 @@ describe("Tail function errors handling", function() {
 
   it("should return the error message when option other than -c or -n is given ", function() {
     expectedOutput =
-      "tail: illegal option --  z\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]";
+      "tail: illegal option -- z\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]";
     assert.deepEqual(
       tail({ count: 10, files: ["README.mdafs", "numbers"], option: "z" }, fs),
       expectedOutput

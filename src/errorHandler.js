@@ -13,7 +13,7 @@ const invalidOptionError = function(funcName, option) {
       option +
       "\nusage: head [-n lines | -c bytes] [file ...]",
     tail:
-      "tail: illegal option --  " +
+      "tail: illegal option -- " +
       option +
       "\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]"
   };

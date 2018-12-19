@@ -58,7 +58,7 @@ describe("invalidOptionError", function() {
 
   it("should return error when invalid option is specified", function() {
     expectedOutput =
-      "tail: illegal option --  z\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]";
+      "tail: illegal option -- z\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]";
     assert.deepEqual(invalidOptionError("tail", "z"), expectedOutput);
   });
 });
@@ -97,7 +97,7 @@ describe("manageTailErrors", function() {
   it("should return error when option given is invalid", function() {
     inputData = {option : "x" ,count : "3" , files: ["numbers"]};
     expectedOutput =
-      "tail: illegal option --  x\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]";
+      "tail: illegal option -- x\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]";
     assert.deepEqual(manageTailErrors(inputData), expectedOutput);
   });
 
