@@ -5,10 +5,7 @@ const seperator = { n: "\n", c: "" };
 const extractRequiredContent = function(option, count, operation, file) {
   let ranges = { head: [0, count], tail: [-count] };
   let range = ranges[operation];
-  return file
-    .split(seperator[option])
-    .slice(range[0], range[1])
-    .join(seperator[option]);
+  return file.split(seperator[option]).slice(range[0], range[1]).join(seperator[option]);
 };
 
 const generateHeader = function(fileName) {
@@ -23,9 +20,9 @@ const isValidSingleFile = function(files, existsSync) {
   return files.length == 1 && isPresent(files[0], existsSync);
 };
 
-const generateRequiredContent = function(details, fs, funcName) {
+const generateRequiredContent = function(details, fs) {
   const { existsSync, readFileSync } = fs;
-  const { files, count, option } = details;
+  const { files, count, option , funcName } = details;
   let getContent = extractRequiredContent.bind(null, option, count, funcName);
   let delimeter = "";
   let content = [];
@@ -51,7 +48,7 @@ const head = function(inputDetails, fs) {
   let fileDetails = { count, files, funcName: "head", option };
   return (
     manageHeadErrors(inputDetails) ||
-    generateRequiredContent(fileDetails, fs, "head")
+    generateRequiredContent(fileDetails, fs)
   );
 };
 
@@ -61,18 +58,8 @@ const tail = function(inputDetails, fs) {
   let fileDetails = { count, files, funcName: "tail", option };
   return (
     manageTailErrors(inputDetails) ||
-    generateRequiredContent(fileDetails, fs, "tail")
+    generateRequiredContent(fileDetails, fs)
   );
-};
-
-const getData = function(inputDetails, fs, funcName) {
-  let errors = { head: manageHeadErrors, tail: manageTailErrors };
-  let { option, count, files } = inputDetails;
-  if (funcName == "tail" && inputDetails.count < 0) {
-    inputDetails.count = Math.abs(inputDetails.count);
-  }
-  let error = errors[funcName](inputDetails);
-  return error || generateRequiredContent(inputDetails, fs, funcName);
 };
 
 module.exports = {
@@ -83,5 +70,4 @@ module.exports = {
   isValidSingleFile,
   generateHeader,
   extractRequiredContent,
-  getData
 };

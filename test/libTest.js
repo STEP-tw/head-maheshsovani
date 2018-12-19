@@ -3,7 +3,6 @@ const {
   head,
   tail,
   isPresent,
-  getData,
   isValidSingleFile,
   generateRequiredContent,
   generateHeader,
@@ -462,10 +461,11 @@ describe("generateRequiredContent function for single files", function() {
     inputData = {
       count: 2,
       files: ["names"],
-      option: "n"
+      option: "n",
+      funcName : "head"
     };
     assert.deepEqual(
-      generateRequiredContent(inputData, fs, "head"),
+      generateRequiredContent(inputData, fs),
       "mahesh\nswapnil"
     );
   });
@@ -474,10 +474,11 @@ describe("generateRequiredContent function for single files", function() {
     inputData = {
       count: 2,
       files: ["numbers"],
-      option: "n"
+      option: "n",
+      funcName : "tail"
     };
     assert.deepEqual(
-      generateRequiredContent(inputData, fs, "tail"),
+      generateRequiredContent(inputData, fs),
       "four\nfive"
     );
   });
@@ -486,18 +487,20 @@ describe("generateRequiredContent function for single files", function() {
     inputData = {
       count: 6,
       files: ["names"],
-      option: "c"
+      option: "c",
+      funcName : "head"
     };
-    assert.deepEqual(generateRequiredContent(inputData, fs, "head"), "mahesh");
+    assert.deepEqual(generateRequiredContent(inputData, fs), "mahesh");
   });
 
   it("should return when operation tail is specified with count and option(-c)", function() {
     inputData = {
       count: 6,
       files: ["numbers"],
-      option: "c"
+      option: "c",
+      funcName : "tail"
     };
-    assert.deepEqual(generateRequiredContent(inputData, fs, "tail"), "r\nfive");
+    assert.deepEqual(generateRequiredContent(inputData, fs), "r\nfive");
   });
 });
 
@@ -508,12 +511,13 @@ describe("generateRequiredContent function for multiple files", function() {
     inputData = {
       count: 2,
       files: ["names", "numbers"],
-      option: "n"
+      option: "n",
+      funcName : "head"
     };
     expectedOutput =
       "==> names <==\nmahesh\nswapnil\n\n==> numbers <==\none\ntwo";
     assert.deepEqual(
-      generateRequiredContent(inputData, fs, "head"),
+      generateRequiredContent(inputData, fs),
       expectedOutput
     );
   });
@@ -522,12 +526,13 @@ describe("generateRequiredContent function for multiple files", function() {
     inputData = {
       count: 2,
       files: ["names", "numbers"],
-      option: "n"
+      option: "n",
+      funcName : "tail"
     };
     expectedOutput =
       "==> names <==\naftab\ndheeraj\n\n==> numbers <==\nfour\nfive";
     assert.deepEqual(
-      generateRequiredContent(inputData, fs, "tail"),
+      generateRequiredContent(inputData, fs),
       expectedOutput
     );
   });
@@ -536,12 +541,13 @@ describe("generateRequiredContent function for multiple files", function() {
     inputData = {
       count: 10,
       files: ["names", "numbers"],
-      option: "c"
+      option: "c",
+      funcName : "head"
     };
     expectedOutput =
       "==> names <==\nmahesh\nswa\n\n==> numbers <==\none\ntwo\nth";
     assert.deepEqual(
-      generateRequiredContent(inputData, fs, "head"),
+      generateRequiredContent(inputData, fs),
       expectedOutput
     );
   });
@@ -550,12 +556,13 @@ describe("generateRequiredContent function for multiple files", function() {
     inputData = {
       count: 10,
       files: ["names", "numbers"],
-      option: "c"
+      option: "c",
+      funcName : "tail"
     };
     expectedOutput =
       "==> names <==\nab\ndheeraj\n\n==> numbers <==\n\nfour\nfive";
     assert.deepEqual(
-      generateRequiredContent(inputData, fs, "tail"),
+      generateRequiredContent(inputData, fs),
       expectedOutput
     );
   });
@@ -572,134 +579,5 @@ describe("generateHeader", function() {
 
   it("should create a head line using a file name", function() {
     assert.deepEqual(generateHeader("numbers.js"), "==> numbers.js <==\n");
-  });
-});
-
-describe("getData", function() {
-  describe("should return specified number of lines or bytes from file depends upon option", function() {
-    it("should return when operation tail is specified with count and option(-n)", function() {
-      inputData = { count: "1", option: "n", files: ["numbers"] };
-      assert.deepEqual(getData(inputData, fs, "tail"), "five");
-
-      inputData = { count: 3, option: "n", files: ["numbers"] };
-      expectedOutput = "three\nfour\nfive";
-      assert.deepEqual(getData(inputData, fs, "tail"), expectedOutput);
-    });
-
-    it("should return lines when operation head is specified with count and option(-n)", function() {
-      inputData = { count: 1, option: "n", files: ["numbers"] };
-      assert.deepEqual(getData(inputData, fs, "head"), "one");
-
-      inputData = { count: 3, option: "n", files: ["numbers"] };
-      expectedOutput = "one\ntwo\nthree";
-      assert.deepEqual(getData(inputData, fs, "head"), expectedOutput);
-    });
-
-    it("should return characters when option(-c) and count is specified with operation tail", function() {
-      inputData = { count: 1, option: "c", files: ["numbers"] };
-      assert.deepEqual(getData(inputData, fs, "tail"), "e");
-
-      inputData = { count: 3, option: "c", files: ["numbers"] };
-      assert.deepEqual(getData(inputData, fs, "tail"), "ive");
-    });
-
-    it("should return characters when option(-c) and count is specified with operation head", function() {
-      inputData = { count: 1, option: "c", files: ["numbers"] };
-      assert.deepEqual(getData(inputData, fs, "head"), "o");
-
-      inputData = { count: 3, option: "c", files: ["numbers"] };
-      assert.deepEqual(getData(inputData, fs, "head"), "one");
-    });
-  });
-
-  describe("negative counts", function() {
-    it("should return error if option is head and count is negative", function() {
-      inputData = { count: -1, option: "c", files: ["numbers"] };
-      expectedOutput = "head: illegal byte count -- -1";
-      assert.deepEqual(getData(inputData, fs, "head"), expectedOutput);
-    });
-
-    it("should return error if option is head and count is negative", function() {
-      inputData = { count: -1, option: "n", files: ["numbers"] };
-      expectedOutput = "five";
-      assert.deepEqual(getData(inputData, fs, "tail"), expectedOutput);
-    });
-  });
-
-  describe("should return formatted files with their contents for multiple files", function() {
-    it("should return when option(-n) and count is specified", function() {
-      inputData = { count: 1, option: "n", files: ["names", "numbers"] };
-      expectedOutput = "==> names <==\ndheeraj\n\n==> numbers <==\nfive";
-      assert.deepEqual(getData(inputData, fs, "tail"), expectedOutput);
-    });
-
-    it("should return when option(-c) and count is specified", function() {
-      inputData = { count: 3, option: "c", files: ["names", "numbers"] };
-      expectedOutput = "==> names <==\nraj\n\n==> numbers <==\nive";
-      assert.deepEqual(getData(inputData, fs, "tail"), expectedOutput);
-    });
-  });
-
-  describe("it should return error if file name is invalid", function() {
-    it("should return error if file is not present", function() {
-      inputData = { count: 3, option: "n", files: ["abc"] };
-      expectedOutput = "head: abc: No such file or directory";
-      assert.deepEqual(getData(inputData, fs, "head"), expectedOutput);
-    });
-
-    it("should return error if file is not present", function() {
-      inputData = { count: "3", option: "n", files: ["abc"] };
-      expectedOutput = "tail: abc: No such file or directory";
-      assert.deepEqual(getData(inputData, fs, "tail"), expectedOutput);
-    });
-  });
-
-  describe("invalid option errors", function() {
-    it("should return invalid option error if invalid option is specified", function() {
-      inputData = { count: "3", option: "z", files: ["abc"] };
-      expectedOutput =
-        "head: illegal option -- z\nusage: head [-n lines | -c bytes] [file ...]";
-      assert.deepEqual(getData(inputData, fs, "head"), expectedOutput);
-    });
-
-    it("should return invalid option error if invalid option is specified", function() {
-      inputData = { count: "3", option: "z", files: ["abc"] };
-      expectedOutput =
-        "tail: illegal option --  z\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]";
-      assert.deepEqual(getData(inputData, fs, "tail"), expectedOutput);
-    });
-  });
-
-  describe("invalid count error", function() {
-    it("should return invalid count error if invalid count is specified", function() {
-      inputData = { count: "-10", option: "n", files: ["abc"] };
-      expectedOutput = "head: illegal line count -- -10";
-      assert.deepEqual(getData(inputData, fs, "head"), expectedOutput);
-    });
-
-    it("should return invalid count error if invalid count is specified", function() {
-      inputData = { count: "-10u", option: "n", files: ["abc"] };
-      expectedOutput = "head: illegal line count -- -10u";
-      assert.deepEqual(getData(inputData, fs, "head"), expectedOutput);
-    });
-
-    it("should return invalid count error if invalid count is specified", function() {
-      inputData = { count: "-10u", option: "n", files: ["abc"] };
-      expectedOutput = "tail: illegal offset -- -10u";
-      assert.deepEqual(getData(inputData, fs, "tail"), expectedOutput);
-    });
-  });
-  describe("file not exist", function() {
-    it("should return file not found error message if file is invalid", function() {
-      inputData = { count: 10, option: "n", files: ["abc"] };
-      expectedOutput = "head: abc: No such file or directory";
-      assert.deepEqual(getData(inputData, fs, "head"), expectedOutput);
-    });
-
-    it("should return file not found error message if file is invalid", function() {
-      inputData = { count: "10", option: "n", files: ["abc"] };
-      expectedOutput = "tail: abc: No such file or directory";
-      assert.deepEqual(getData(inputData, fs, "tail"), expectedOutput);
-    });
   });
 });
