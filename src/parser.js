@@ -1,16 +1,16 @@
 let hasOption = function(details) {
-  return hasDash(details) && !!details[1].match(/[A-z]/);
+  return startsWithDash(details) && !!details[1].match(/[A-z]/);
 };
 
 const isOptionWithCount = function(details) {
-  return hasDash(details) && details.length > 2;
+  return startsWithDash(details) && details.length > 2;
 };
 
 const isOnlyOption = function(details) {
   return hasOption(details) && details.length == 2;
 };
 
-const hasDash = function(option) {
+const startsWithDash = function(option) {
   return option.startsWith("-");
 };
 
@@ -19,7 +19,7 @@ const createObject = function(option, count, files) {
 };
 
 const isOnlyCount = function(count) {
-  return hasDash(count) && !isNaN(count);
+  return startsWithDash(count) && !isNaN(count);
 };
 
 const parseInput = function(details) {
@@ -43,7 +43,7 @@ module.exports = {
   isOptionWithCount,
   hasOption,
   isOnlyOption,
-  hasDash,
+  startsWithDash,
   createObject,
   isOnlyCount
 };

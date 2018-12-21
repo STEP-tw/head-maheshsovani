@@ -5,7 +5,7 @@ const {
   isOptionWithCount,
   hasOption,
   isOnlyOption,
-  hasDash,
+  startsWithDash,
   createObject,
   isOnlyCount
 } = require("../src/parser.js");
@@ -103,12 +103,12 @@ describe("isOnlyOption", function() {
   });
 });
 
-describe("hasDash", function() {
+describe("startsWithDash", function() {
   it("should return true when option given startsWith the dash", function() {
-    assert.equal(hasDash("maasf"), false);
+    assert.equal(startsWithDash("maasf"), false);
   });
   it("should return false when option given doesn't start with dash", function() {
-    assert.equal(hasDash("-n"), true);
+    assert.equal(startsWithDash("-n"), true);
   });
 });
 describe("createObject", function() {
