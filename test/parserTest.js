@@ -6,7 +6,7 @@ const {
   hasOption,
   isOnlyOption,
   startsWithDash,
-  createObject,
+  createArgsObject,
   isOnlyCount
 } = require("../src/parser.js");
 
@@ -111,15 +111,15 @@ describe("startsWithDash", function() {
     assert.equal(startsWithDash("-n"), true);
   });
 });
-describe("createObject", function() {
+describe("createArgsObject", function() {
   it("should return undefined values of object if values are not specified", function() {
     expectedOutput = { option: undefined,count: undefined, files: undefined };
-    assert.deepEqual(createObject(), expectedOutput);
+    assert.deepEqual(createArgsObject(), expectedOutput);
   });
 
   it("should return object when given parameters", function() {
     expectedOutput = { option: "n", count: 3, files: ["file1", "file2"] };
-    assert.deepEqual(createObject("n", 3, ["file1", "file2"]), expectedOutput);
+    assert.deepEqual(createArgsObject("n", 3, ["file1", "file2"]), expectedOutput);
   });
 });
 

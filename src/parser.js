@@ -14,7 +14,7 @@ const startsWithDash = function(option) {
   return option.startsWith("-");
 };
 
-const createObject = function(option, count, files) {
+const createArgsObject = function(option, count, files) {
   return { option, count, files };
 };
 
@@ -24,18 +24,18 @@ const isOnlyCount = function(count) {
 
 const parseInput = function(details) {
   if (isOnlyCount(details[0])) {
-    return createObject("n", Math.abs(details[0]), details.slice(1));
+    return createArgsObject("n", Math.abs(details[0]), details.slice(1));
   }
 
   if (isOnlyOption(details[0])) {
-    return createObject(details[0][1], details[1], details.slice(2));
+    return createArgsObject(details[0][1], details[1], details.slice(2));
   }
 
   if (isOptionWithCount(details[0])) {
-    return createObject(details[0][1], details[0].slice(2), details.slice(1));
+    return createArgsObject(details[0][1], details[0].slice(2), details.slice(1));
   }
 
-  return createObject("n", 10, details);
+  return createArgsObject("n", 10, details);
 };
 
 module.exports = {
@@ -44,6 +44,6 @@ module.exports = {
   hasOption,
   isOnlyOption,
   startsWithDash,
-  createObject,
+  createArgsObject,
   isOnlyCount
 };
