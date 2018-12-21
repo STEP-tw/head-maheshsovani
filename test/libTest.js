@@ -3,7 +3,7 @@ const {
   head,
   tail,
   isPresent,
-  isValidSingleFile,
+  isValidFile,
   generateRequiredContent,
   generateHeader,
   extractRequiredContent
@@ -440,25 +440,25 @@ describe("isPresent", function() {
   });
 });
 
-describe("isValidSingleFile", function() {
+describe("isValidFile", function() {
   it("should return true if it has a single file and which is present", function() {
-    assert.deepEqual(isValidSingleFile(["numbers"], existsSync), true);
+    assert.deepEqual(isValidFile(["numbers"], existsSync), true);
   });
 
   it("should return false if it has more than one file", function() {
     assert.deepEqual(
-      isValidSingleFile(["names", "numbers"], existsSync),
+      isValidFile(["names", "numbers"], existsSync),
       false
     );
   });
 
   it("should return false if it has a single file and which is not present", function() {
-    assert.deepEqual(isValidSingleFile(["abcd.js"], existsSync), false);
+    assert.deepEqual(isValidFile(["abcd.js"], existsSync), false);
   });
 
   it("should return false if it has more than one file and some are not present", function() {
     assert.deepEqual(
-      isValidSingleFile(["numbers", "abc.js"], existsSync),
+      isValidFile(["numbers", "abc.js"], existsSync),
       false
     );
   });

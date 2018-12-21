@@ -16,7 +16,7 @@ const isPresent = function(fileName, existsSync) {
   return existsSync(fileName);
 };
 
-const isValidSingleFile = function(files, existsSync) {
+const isValidFile = function(files, existsSync) {
   return files.length == 1 && isPresent(files[0], existsSync);
 };
 
@@ -27,7 +27,7 @@ const generateRequiredContent = function(details, fs) {
   let delimeter = "";
   let content = [];
 
-  if (isValidSingleFile(files, existsSync)) {
+  if (isValidFile(files, existsSync)) {
     return getContent(readFileSync(files[0], "utf8"));
   }
 
@@ -66,7 +66,7 @@ module.exports = {
   tail,
   isPresent,
   generateRequiredContent,
-  isValidSingleFile,
+  isValidFile,
   generateHeader,
   extractRequiredContent,
 };
