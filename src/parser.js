@@ -23,16 +23,17 @@ const isOnlyCount = function(count) {
 };
 
 const parseInput = function(details) {
-  if (isOnlyCount(details[0])) {
-    return createArgsObject("n", Math.abs(details[0]), details.slice(1));
+  let optionCandidate = details[0];
+  if (isOnlyCount(optionCandidate)) {
+    return createArgsObject("n", Math.abs(optionCandidate), details.slice(1));
   }
 
-  if (isOnlyOption(details[0])) {
-    return createArgsObject(details[0][1], details[1], details.slice(2));
+  if (isOnlyOption(optionCandidate)) {
+    return createArgsObject(optionCandidate[1], details[1], details.slice(2));
   }
 
-  if (isOptionWithCount(details[0])) {
-    return createArgsObject(details[0][1], details[0].slice(2), details.slice(1));
+  if (isOptionWithCount(optionCandidate)) {
+    return createArgsObject(optionCandidate[1], optionCandidate.slice(2), details.slice(1));
   }
 
   return createArgsObject("n", 10, details);
