@@ -2,9 +2,9 @@ const { manageHeadErrors, manageTailErrors } = require("./errorHandler.js");
 
 const seperator = { n: "\n", c: "" };
 
-const extractRequiredContent = function(option, count, command, file) {
+const extractRequiredContent = function(option, count, utility, file) {
   let ranges = { head: [0, count], tail: [-count] };
-  let range = ranges[command];
+  let range = ranges[utility];
   return file.split(seperator[option]).slice(range[0], range[1]).join(seperator[option]);
 };
 
@@ -22,8 +22,8 @@ const isValidFile = function(files, existsSync) {
 
 const generateRequiredContent = function(details, fs) {
   const { existsSync, readFileSync } = fs;
-  const { files, count, option , command } = details;
-  let getContent = extractRequiredContent.bind(null, option, count, command);
+  const { files, count, option , utility } = details;
+  let getContent = extractRequiredContent.bind(null, option, count, utility);
   let delimeter = "";
   let content = [];
 
@@ -32,7 +32,7 @@ const generateRequiredContent = function(details, fs) {
   }
 
   for (let file of files) {
-    let fileContent = command + ": " + file + ": No such file or directory";
+    let fileContent = utility + ": " + file + ": No such file or directory";
     if (isPresent(file, existsSync)) {
       fileContent = delimeter + generateHeader(file);
       fileContent += getContent(readFileSync(file, "utf8"));
@@ -45,7 +45,7 @@ const generateRequiredContent = function(details, fs) {
 
 const head = function(inputDetails, fs) {
   let { option, count, files } = inputDetails;
-  let fileDetails = { count, files, command: "head", option };
+  let fileDetails = { count, files, utility: "head", option };
   return (
     manageHeadErrors(inputDetails) ||
     generateRequiredContent(fileDetails, fs)
@@ -54,7 +54,7 @@ const head = function(inputDetails, fs) {
 
 const tail = function(inputDetails, fs) {
   let { option, count, files } = inputDetails;
-  let fileDetails = { count:Math.abs(count), files, command: "tail", option };
+  let fileDetails = { count:Math.abs(count), files, utility: "tail", option };
   return (
     manageTailErrors(inputDetails) ||
     generateRequiredContent(fileDetails, fs)

@@ -471,7 +471,7 @@ describe("generateRequiredContent function for single files", function() {
       count: 2,
       files: ["names"],
       option: "n",
-      command : "head"
+      utility : "head"
     };
     assert.deepEqual(
       generateRequiredContent(inputData, fs),
@@ -484,7 +484,7 @@ describe("generateRequiredContent function for single files", function() {
       count: 2,
       files: ["numbers"],
       option: "n",
-      command : "tail"
+      utility : "tail"
     };
     assert.deepEqual(
       generateRequiredContent(inputData, fs),
@@ -497,7 +497,7 @@ describe("generateRequiredContent function for single files", function() {
       count: 6,
       files: ["names"],
       option: "c",
-      command : "head"
+      utility : "head"
     };
     assert.deepEqual(generateRequiredContent(inputData, fs), "mahesh");
   });
@@ -507,7 +507,7 @@ describe("generateRequiredContent function for single files", function() {
       count: 6,
       files: ["numbers"],
       option: "c",
-      command : "tail"
+      utility : "tail"
     };
     assert.deepEqual(generateRequiredContent(inputData, fs), "r\nfive");
   });
@@ -521,7 +521,7 @@ describe("generateRequiredContent function for multiple files", function() {
       count: 2,
       files: ["names", "numbers"],
       option: "n",
-      command : "head"
+      utility : "head"
     };
     expectedOutput =
       "==> names <==\nmahesh\nswapnil\n\n==> numbers <==\none\ntwo";
@@ -536,7 +536,7 @@ describe("generateRequiredContent function for multiple files", function() {
       count: 2,
       files: ["names", "numbers"],
       option: "n",
-      command : "tail"
+      utility : "tail"
     };
     expectedOutput =
       "==> names <==\naftab\ndheeraj\n\n==> numbers <==\nfour\nfive";
@@ -551,7 +551,7 @@ describe("generateRequiredContent function for multiple files", function() {
       count: 10,
       files: ["names", "numbers"],
       option: "c",
-      command : "head"
+      utility : "head"
     };
     expectedOutput =
       "==> names <==\nmahesh\nswa\n\n==> numbers <==\none\ntwo\nth";
@@ -566,7 +566,7 @@ describe("generateRequiredContent function for multiple files", function() {
       count: 10,
       files: ["names", "numbers"],
       option: "c",
-      command : "tail"
+      utility : "tail"
     };
     expectedOutput =
       "==> names <==\nab\ndheeraj\n\n==> numbers <==\n\nfour\nfive";
